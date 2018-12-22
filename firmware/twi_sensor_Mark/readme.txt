@@ -1,0 +1,1 @@
+Add this folder to the nRF5_SDK_15.0.0_a53641a\nRF5_SDK_15.0.0_a53641a\examples\peripheral\ path
