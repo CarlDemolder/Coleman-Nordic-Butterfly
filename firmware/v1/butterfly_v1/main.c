@@ -18,6 +18,7 @@
 #include "TMP116.h"                                                             // including the i2c file for TMP116 communication                                                                 
 #include "led.h"
 #include "ble_temperature_service.h"
+#include "led.h"
 //#include "ble_configuration_service.h"
 
 
@@ -50,6 +51,8 @@
 #define SEC_PARAM_MAX_KEY_SIZE          16                                      /**< Maximum encryption key size. */
 
 #define DEAD_BEEF                       0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
+
+#define p_LDO_EN                        8
 
 NRF_BLE_GATT_DEF(m_gatt);                                                       /**< GATT module instance. */
 NRF_BLE_QWR_DEF(m_qwr);                                                         /**< Context for the Queued Write module.*/
@@ -667,6 +670,11 @@ static void advertising_start(void)
 int main(void)
 {
     // Initialize.
+    nrf_gpio_cfg_output(p_LDO_EN);      // set LDO_EN pin to output
+    nrf_gpio_pin_write(p_LDO_EN,1);     // enable the LDO to keep the MCU alive
+    led_init();
+    led_blink(500, 500);
+
     log_init();
     timers_init();
     twi_init();      // Initialize I2C protocol
