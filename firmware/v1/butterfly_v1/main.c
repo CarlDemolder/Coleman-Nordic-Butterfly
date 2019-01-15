@@ -671,8 +671,8 @@ static void advertising_start(void)
 int main(void)
 {
     // Initialize.
-    nrf_gpio_cfg_output(p_LDO_EN);      // set LDO_EN pin to output
-    nrf_gpio_pin_write(p_LDO_EN,1);     // enable the LDO to keep the MCU alive
+//    nrf_gpio_cfg_output(p_LDO_EN);      // set LDO_EN pin to output
+//    nrf_gpio_pin_write(p_LDO_EN,1);     // enable the LDO to keep the MCU alive
     led_init();
     led_blink(500, 500);
 
