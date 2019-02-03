@@ -4,6 +4,7 @@
 #include "ble_advertising.h"
 #include "ble_conn_params.h"
 #include "nrf_sdh_ble.h"
+#include "nrf_drv_clock.h"
 #include "app_timer.h"
 #include "fds.h"
 #include "peer_manager.h"
@@ -24,20 +25,20 @@
 
 #define DEVICE_NAME                     "Butterfly_v1"                          /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "Coleman Lab"                           /**< Manufacturer. Will be passed to Device Information Service. */
-#define APP_ADV_INTERVAL                300                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
+#define APP_ADV_INTERVAL                1600                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 
 #define APP_ADV_DURATION                18000                                   /**< The advertising duration (180 seconds) in units of 10 milliseconds. */
 #define APP_BLE_OBSERVER_PRIO           3                                       /**< Application's BLE observer priority. You shouldn't need to modify this value. */
 #define APP_BLE_CONN_CFG_TAG            1                                       /**< A tag identifying the SoftDevice BLE configuration. */
 
-#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(100, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.1 seconds). */
-#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(200, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.2 second). */
-#define SLAVE_LATENCY                   0                                       /**< Slave latency. */
-#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(4000, UNIT_10_MS)         /**< Connection supervisory timeout (4 seconds). */
+#define MIN_CONN_INTERVAL               MSEC_TO_UNITS(3995, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.1 seconds). */
+#define MAX_CONN_INTERVAL               MSEC_TO_UNITS(3995, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.2 second). */
+#define SLAVE_LATENCY                   1                                       /**< Slave latency. */
+#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(32000, UNIT_10_MS)         /**< Connection supervisory timeout (21 seconds). */
 
 #define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(5000)                   /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
 #define NEXT_CONN_PARAMS_UPDATE_DELAY   APP_TIMER_TICKS(30000)                  /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
-#define MAX_CONN_PARAMS_UPDATE_COUNT    3                                       /**< Number of attempts before giving up the connection parameter negotiation. */
+#define MAX_CONN_PARAMS_UPDATE_COUNT    1                                       /**< Number of attempts before giving up the connection parameter negotiation. */
 
 #define NOTIFICATION_INTERVAL           APP_TIMER_TICKS(10000)                   /**< Setting the timer to trigger every 10 seconds. */
 
@@ -52,7 +53,7 @@
 
 #define DEAD_BEEF                       0xDEADBEEF                              /**< Value used as error code on stack dump, can be used to identify stack location on stack unwind. */
 
-#define p_LDO_EN                        8
+#define p_LDO_EN                        8                                       /** Pinout for LED */
 
 NRF_BLE_GATT_DEF(m_gatt);                                                       /**< GATT module instance. */
 NRF_BLE_QWR_DEF(m_qwr);                                                         /**< Context for the Queued Write module.*/
@@ -96,7 +97,7 @@ void assert_nrf_callback(uint16_t line_num, const uint8_t * p_file_name)
  */
 static void pm_evt_handler(pm_evt_t const * p_evt)
 {
-    NRF_LOG_INFO("Power Management Event Handler");
+    NRF_LOG_INFO("Peer Management Event Handler");
 
     ret_code_t err_code;
 
@@ -188,8 +189,6 @@ static void pm_evt_handler(pm_evt_t const * p_evt)
     }
 }
 
-
-
 /**@brief Function for handling the Battery measurement timer timeout.
  *
  * @details This function will be called each time the battery level measurement timer expires.
@@ -236,7 +235,6 @@ static void notification_timer_start(void)
        ret_code_t err_code;
        err_code = app_timer_start(m_notification_timer_id, NOTIFICATION_INTERVAL, NULL);
        APP_ERROR_CHECK(err_code); 
-
 }
 
 /**@brief Function for stoping timers.
@@ -248,6 +246,7 @@ static void notification_timer_stop(void)
        err_code = app_timer_stop(m_notification_timer_id);
        APP_ERROR_CHECK(err_code);
 }
+
 
 /**@brief Function for the GAP initialization.
  *
@@ -434,21 +433,6 @@ static void conn_params_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
-/**@brief Function for putting the chip into sleep mode.
- *
- * @note This function will not return.
- */
-static void sleep_mode_enter(void)
-{
-    NRF_LOG_DEBUG("Entering Sleep Mode");
-    ret_code_t err_code;
-
-    // Go to system-off mode (this function will not return; wakeup will cause a reset).
-    err_code = sd_power_system_off();
-    APP_ERROR_CHECK(err_code);
-}
-
-
 /**@brief Function for handling advertising events.
  *
  * @details This function will be called for advertising events which are passed to the application.
@@ -468,7 +452,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 
         case BLE_ADV_EVT_IDLE:
             NRF_LOG_INFO("BLE advertising idle.");
-            sleep_mode_enter();
+//            deep_sleep_mode_enter();
             break;
 
         default:
@@ -490,7 +474,7 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
     {
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("BLE_EVT_Disconnected.");
-            nrf_gpio_pin_write(p_LDO_EN, 0);     // Disabling the LDO to kill the MCU
+//            nrf_gpio_pin_write(p_LDO_EN, 0);     // Disabling the LDO to kill the MCU
             // LED indication will be changed when advertising starts.
             break;
 
@@ -644,6 +628,30 @@ static void power_management_init(void)
     APP_ERROR_CHECK(err_code);
 }
 
+static void sleep_mode_on_enter(void)
+{
+    NRF_LOG_DEBUG("Entering Sleep Mode via System On");
+    ret_code_t err_code;
+
+    // Go to system-on mode
+//    err_code = sd_power_system_on();
+//    APP_ERROR_CHECK(err_code);
+}
+
+/**@brief Function for putting the chip into sleep mode.
+ *
+ * @note This function will not return.
+ */
+static void deep_sleep_mode_enter(void)
+{
+    NRF_LOG_DEBUG("Entering Sleep Mode");
+    ret_code_t err_code;
+
+    // Go to system-off mode (this function will not return; wakeup will cause a reset).
+    err_code = sd_power_system_off();
+    APP_ERROR_CHECK(err_code);
+}
+
 
 /**@brief Function for handling the idle state (main loop).
  *
@@ -653,6 +661,7 @@ static void idle_state_handle(void)
 {
     if (NRF_LOG_PROCESS() == false)
     {
+//        NRF_LOG_INFO("NRF_PWR_MGMT_RUN()");
         nrf_pwr_mgmt_run();
     }
 }
@@ -671,13 +680,15 @@ static void advertising_start(void)
 int main(void)
 {
     // Initialize.
-//    nrf_gpio_cfg_output(p_LDO_EN);      // set LDO_EN pin to output
-//    nrf_gpio_pin_write(p_LDO_EN,1);     // enable the LDO to keep the MCU alive
+    nrf_gpio_cfg_output(p_LDO_EN);      // set LDO_EN pin to output
+    nrf_gpio_pin_write(p_LDO_EN,1);     // enable the LDO to keep the MCU alive
     led_init();
     led_blink(500, 500);
 
     log_init();
     timers_init();
+
+
     twi_init();      // Initialize I2C protocol
     NRF_LOG_INFO("I2C Init.");
     power_management_init();    // Initialize Power Manager Unit
@@ -693,7 +704,7 @@ int main(void)
 
     float sample_temp = tmp116_get_celsius();
     // Start execution.
-    NRF_LOG_INFO("Template example started.");
+    NRF_LOG_INFO("Nordic Butterfly started.");
     advertising_start();
 
     // Enter main loop.

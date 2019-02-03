@@ -41,11 +41,10 @@
     </folder>
     <folder Name="nRF_Log">
       <file file_name="$(SDK)/components/libraries/log/src/nrf_log_backend_rtt.c" />
-      <file file_name="$(SDK)/components/libraries/log/src/nrf_log_backend_serial.c" />
-      <file file_name="$(SDK)/components/libraries/log/src/nrf_log_backend_uart.c" />
       <file file_name="$(SDK)/components/libraries/log/src/nrf_log_default_backends.c" />
       <file file_name="$(SDK)/components/libraries/log/src/nrf_log_frontend.c" />
       <file file_name="$(SDK)/components/libraries/log/src/nrf_log_str_formatter.c" />
+      <file file_name="../../../../../../../../Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/log/src/nrf_log_backend_serial.c" />
     </folder>
     <folder Name="nRF_Libraries">
       <file file_name="$(SDK)/components/libraries/button/app_button.c" />
@@ -84,13 +83,10 @@
     </folder>
     <folder Name="nRF_Drivers">
       <file file_name="$(SDK)/integration/nrfx/legacy/nrf_drv_clock.c" />
-      <file file_name="$(SDK)/integration/nrfx/legacy/nrf_drv_uart.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_clock.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_gpiote.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_power_clock.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/prs/nrfx_prs.c" />
-      <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_uart.c" />
-      <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_uarte.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_twi.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_twim.c" />
       <file file_name="$(SDK)/integration/nrfx/legacy/nrf_drv_twi.c" />
