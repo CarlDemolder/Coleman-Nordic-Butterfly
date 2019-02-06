@@ -452,6 +452,7 @@ static void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 
         case BLE_ADV_EVT_IDLE:
             NRF_LOG_INFO("BLE advertising idle.");
+            nrf_gpio_pin_write(p_LDO_EN, 0);     // Disabling the LDO to kill the MCU
 //            deep_sleep_mode_enter();
             break;
 
@@ -474,7 +475,7 @@ static void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
     {
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("BLE_EVT_Disconnected.");
-//            nrf_gpio_pin_write(p_LDO_EN, 0);     // Disabling the LDO to kill the MCU
+            nrf_gpio_pin_write(p_LDO_EN, 0);     // Disabling the LDO to kill the MCU
             // LED indication will be changed when advertising starts.
             break;
 
