@@ -40,7 +40,6 @@ void tmp116_get_uint8_t(uint8_t *tmp116_uint8_t)
     }
 }
 
-
 void configure_tmp116(uint8_t configuration_mode)
 {
     uint8_t register_byte_count = 3; //Slave Address + Register Write Value

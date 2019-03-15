@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context="com.example.intern.ble_ex1.MainActivity">
+
+    <LinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+
+        <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp">
+
+            <TextView
+                    android:text="@string/sampling_rate_title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            <Spinner
+                    android:id="@+id/sampling_rate_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:id="@+id/rest1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="8"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                        android:id="@+id/rest2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                    <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/temp_name"
+                            android:textColor="@color/RED"
+                            android:id="@+id/temp_check"
+                            android:layout_gravity="start"/>
+                    <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/uv_name"
+                            android:textColor="@color/BLUE"
+                            android:id="@+id/uv_check"
+                            android:layout_gravity="start"/>
+                    <CheckBox
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/battery_name"
+                            android:textColor="@color/GREEN"
+                            android:id="@+id/battery_check"
+                            android:layout_gravity="start"/>
+                </LinearLayout>
+
+                <LinearLayout
+                        android:id="@+id/rest3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                    <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/stop_recording"
+                            android:id="@+id/stopBtn"
+                            android:layout_gravity="center_horizontal" />
+                    <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/save_name"
+                            android:id="@+id/saveBtn"
+                            android:layout_gravity="center_horizontal" />
+                    <Button
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/restart_recording"
+                            android:id="@+id/startBtn"
+                            android:layout_gravity="center_horizontal" />
+                </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

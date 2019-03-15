@@ -52,7 +52,6 @@
       <file file_name="$(SDK)/components/libraries/util/app_error_handler_gcc.c" />
       <file file_name="$(SDK)/components/libraries/util/app_error_weak.c" />
       <file file_name="$(SDK)/components/libraries/scheduler/app_scheduler.c" />
-      <file file_name="$(SDK)/components/libraries/timer/app_timer.c" />
       <file file_name="$(SDK)/components/libraries/util/app_util_platform.c" />
       <file file_name="$(SDK)/components/libraries/crc16/crc16.c" />
       <file file_name="$(SDK)/components/libraries/fds/fds.c" />
@@ -72,6 +71,7 @@
       <file file_name="$(SDK)/components/libraries/experimental_section_vars/nrf_section_iter.c" />
       <file file_name="$(SDK)/components/libraries/strerror/nrf_strerror.c" />
       <file file_name="$(SDK)/components/libraries/sensorsim/sensorsim.c" />
+      <file file_name="../../../../../../../../Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/timer/app_timer.c" />
     </folder>
     <folder Name="None">
       <file file_name="$(SDK)/modules/nrfx/mdk/ses_startup_nrf52.s" />
@@ -82,14 +82,13 @@
       <file file_name="$(SDK)/components/boards/boards.c" />
     </folder>
     <folder Name="nRF_Drivers">
-      <file file_name="$(SDK)/integration/nrfx/legacy/nrf_drv_clock.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_clock.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_gpiote.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_power_clock.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/prs/nrfx_prs.c" />
-      <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_twi.c" />
       <file file_name="$(SDK)/modules/nrfx/drivers/src/nrfx_twim.c" />
-      <file file_name="$(SDK)/integration/nrfx/legacy/nrf_drv_twi.c" />
+      <file file_name="../../../../../../../../Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/src/nrfx_rtc.c" />
+      <file file_name="../../../../../../../../Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/src/nrfx_power.c" />
     </folder>
     <folder Name="Board Support">
       <file file_name="$(SDK)/components/libraries/bsp/bsp.c" />
@@ -102,13 +101,16 @@
       <file file_name="../../../i2c.h" />
       <file file_name="../../../TMP116.c" />
       <file file_name="../../../TMP116.h" />
-      <file file_name="../../../led.c" />
-      <file file_name="../../../led.h" />
       <file file_name="../../../common.h" />
-      <file file_name="../../../ble_configuration_service.c" />
-      <file file_name="../../../ble_configuration_service.h" />
       <file file_name="../../../ble_temperature_service.c" />
       <file file_name="../../../ble_temperature_service.h" />
+      <file file_name="../../../bluetooth.c" />
+      <file file_name="../../../bluetooth.h" />
+      <file file_name="../../../clocks.c" />
+      <file file_name="../../../clocks.h" />
+      <file file_name="../../../power.c" />
+      <file file_name="../../../power.h" />
+      <file file_name="../../../common.c" />
     </folder>
     <folder Name="nRF_Segger_RTT">
       <file file_name="$(SDK)/external/segger_rtt/SEGGER_RTT.c" />

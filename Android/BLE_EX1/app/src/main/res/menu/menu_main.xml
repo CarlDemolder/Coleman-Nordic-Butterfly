@@ -1,0 +1,37 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.intern.ble_ex1.MainActivity">
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="1"
+        android:title="@string/action_settings"
+        app:showAsAction="withText"/>
+
+    <item android:id="@+id/menu_start"
+          android:title="@string/menu_start"
+          android:orderInCategory="2"
+          app:showAsAction="withText"/>
+
+    <item android:id="@+id/menu_stop"
+        android:title="@string/menu_stop"
+        android:orderInCategory="3"
+        app:showAsAction="withText"/>
+
+    <item android:id="@+id/menu_scan"
+          android:title="@string/menu_scan"
+          android:orderInCategory="4"
+          app:showAsAction="withText"/>
+
+    <item android:id="@+id/menu_connect"
+        android:title="@string/menu_connect"
+        android:orderInCategory="5"
+        app:showAsAction="withText"/>
+
+    <item android:id="@+id/menu_disconnect"
+        android:title="@string/menu_disconnect"
+        android:orderInCategory="6"
+        app:showAsAction="withText"/>
+
+</menu>

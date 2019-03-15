@@ -10,6 +10,7 @@
  * @return      NRF_SUCCESS on successful initialization of service, otherwise an error code.
  */
 
+
 uint32_t ble_temperature_service_initialize(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init)
 {
     NRF_LOG_INFO("Temperature Service.");
@@ -37,12 +38,23 @@ uint32_t ble_temperature_service_initialize(ble_temperature_service_t * p_cus, c
     err_code = sd_ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY, &ble_uuid, &p_cus->service_handle);
     if (err_code != NRF_SUCCESS)
     {
-        NRF_LOG_INFO("DID NOT CREATE PROPERLY");
+        NRF_LOG_INFO("DID NOT CREATE SERVICE PROPERLY");
         return err_code;
     }
-  
-    // Adding Custom Value Characteristic
-    return temperature_value_char_add(p_cus, p_cus_init);
+
+    err_code = temperature_value_char_add(p_cus, p_cus_init);
+    if (err_code != NRF_SUCCESS)
+    {
+        NRF_LOG_INFO("DID NOT CREATE TEMPERATURE CHARACTERISTIC PROPERLY");
+        return err_code;
+    }
+
+    err_code = sampling_interval_value_char_add(p_cus, p_cus_init);
+    if (err_code != NRF_SUCCESS)
+    {
+        NRF_LOG_INFO("DID NOT CREATE TEMPERATURE CHARACTERISTIC PROPERLY");
+        return err_code;
+    }
 }
 
 
@@ -53,7 +65,7 @@ uint32_t ble_temperature_service_initialize(ble_temperature_service_t * p_cus, c
  *
  * @return      NRF_SUCCESS on success, otherwise an error code.
  */
-static uint32_t temperature_value_char_add(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init)
+uint32_t temperature_value_char_add(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init)
 {
     NRF_LOG_INFO("Temperature Value Characteristic Add.");
     // Local Variables to the function
@@ -73,7 +85,6 @@ static uint32_t temperature_value_char_add(ble_temperature_service_t * p_cus, co
     
     cccd_md.write_perm = p_cus_init->custom_value_char_attr_md.cccd_write_perm;
     cccd_md.vloc = BLE_GATTS_VLOC_STACK;
-
 
     // char_md is the variable used to define the properties that will be displayed to the central during service discovery
     memset(&char_md, 0, sizeof(char_md));
@@ -110,12 +121,76 @@ static uint32_t temperature_value_char_add(ble_temperature_service_t * p_cus, co
     attr_char_value.init_offs = 0;
     attr_char_value.max_len   = sizeof(uint8_t)*5;
 
-    err_code = sd_ble_gatts_characteristic_add(p_cus->service_handle, &char_md, &attr_char_value, &p_cus->custom_value_handles);
+    err_code = sd_ble_gatts_characteristic_add(p_cus->service_handle, &char_md, &attr_char_value, &p_cus->temperature_value_handles);
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
     }
 
+    return NRF_SUCCESS;
+}
+
+/**@brief Function for adding the Sampling Interval Value characteristic.
+ *
+ * @param[in]   p_cus        Temperature Service structure.
+ * @param[in]   p_cus_init   Information needed to initialize the service.
+ *
+ * @return      NRF_SUCCESS on success, otherwise an error code.
+ */
+uint32_t sampling_interval_value_char_add(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init)
+{
+    NRF_LOG_INFO("Sampling Interval Value Characteristic Add.");
+    // Local Variables to the function
+    uint32_t                err_code;
+    ble_gatts_char_md_t     char_md;
+    ble_gatts_attr_t        attr_char_value;
+    ble_uuid_t              ble_uuid;
+    ble_gatts_attr_md_t     attr_md;
+
+    // char_md is the variable used to define the properties that will be displayed to the central during service discovery
+    memset(&char_md, 0, sizeof(char_md));
+
+    char_md.char_props.read   = 1;
+    char_md.char_props.write  = 0;
+    char_md.char_props.write_wo_resp = 1;
+    char_md.p_char_user_desc  = NULL;
+    char_md.p_char_pf         = NULL;
+    char_md.p_user_desc_md    = NULL;
+    char_md.p_cccd_md         = NULL; 
+    char_md.p_sccd_md         = NULL;
+
+    ble_uuid.type = p_cus->uuid_type;
+    ble_uuid.uuid = SAMPLING_INTERVAL_CHAR_UUID;
+
+    // attr_md is the variable that sets the properties of the attribute, or the accessability of the attribute
+    // .vloc option is set to BLE_GATTS_VLOC_STACK as we want the characteristic to be stored in the SoftDevice RAM section,
+    // and not in the Application RAM section
+    memset(&attr_md, 0, sizeof(attr_md));
+
+//    //  Read  operation on cccd should be possible without authentication.
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.write_perm);
+
+    attr_md.read_perm  = p_cus_init->custom_value_char_attr_md.read_perm;
+    attr_md.write_perm = p_cus_init->custom_value_char_attr_md.write_perm;
+    attr_md.vloc       = BLE_GATTS_VLOC_STACK;
+    attr_md.rd_auth    = 0;
+    attr_md.wr_auth    = 0;
+    attr_md.vlen       = 0;
+
+    memset(&attr_char_value, 0, sizeof(attr_char_value));
+
+    attr_char_value.p_uuid    = &ble_uuid;
+    attr_char_value.p_attr_md = &attr_md;
+    attr_char_value.init_len  = sizeof(uint8_t);
+    attr_char_value.init_offs = 0;
+    attr_char_value.max_len   = sizeof(uint8_t);
+
+    err_code = sd_ble_gatts_characteristic_add(p_cus->service_handle, &char_md, &attr_char_value, &p_cus->sampling_interval_handles);
+    if(err_code != NRF_SUCCESS)
+    {
+        return err_code;
+    }
     return NRF_SUCCESS;
 }
 
@@ -138,7 +213,7 @@ uint32_t temperature_custom_value_update(ble_temperature_service_t * p_cus, uint
     gatts_value.p_value = array_data;
 
     // Update database.
-    err_code = sd_ble_gatts_value_set(p_cus->conn_handle, p_cus->custom_value_handles.value_handle, &gatts_value);
+    err_code = sd_ble_gatts_value_set(p_cus->conn_handle, p_cus->temperature_value_handles.value_handle, &gatts_value);
     if (err_code != NRF_SUCCESS)
     {
         return err_code;
@@ -151,7 +226,7 @@ uint32_t temperature_custom_value_update(ble_temperature_service_t * p_cus, uint
 
         memset(&hvx_params, 0, sizeof(hvx_params));
 
-        hvx_params.handle = p_cus->custom_value_handles.value_handle;
+        hvx_params.handle = p_cus->temperature_value_handles.value_handle;
         hvx_params.type   = BLE_GATT_HVX_NOTIFICATION;
         hvx_params.offset = gatts_value.offset;
         hvx_params.p_len  = &gatts_value.len;
@@ -166,6 +241,33 @@ uint32_t temperature_custom_value_update(ble_temperature_service_t * p_cus, uint
         NRF_LOG_INFO("sd_ble_gatts_hvx result: NRF_ERROR_INVALID_STATE. \r\n"); 
     }
     return err_code;
+}
+
+uint32_t sampling_interval_value_update(ble_temperature_service_t * p_cus, uint8_t * new_sampling_interval)
+{
+    NRF_LOG_INFO("In sampling_interval_value_update. \r\n"); 
+    if (p_cus == NULL)
+    {
+        return NRF_ERROR_NULL;
+    }
+
+    uint32_t err_code = NRF_SUCCESS;
+    ble_gatts_value_t gatts_value;
+
+    // Initialize value struct.
+    memset(&gatts_value, 0, sizeof(gatts_value));
+
+    gatts_value.len     = sizeof(uint8_t);
+    gatts_value.offset  = 0;
+    gatts_value.p_value = new_sampling_interval;
+
+    // Get Characteristic from Database
+    err_code = sd_ble_gatts_value_get(p_cus->conn_handle, p_cus->sampling_interval_handles.value_handle, &gatts_value);
+    if (err_code != NRF_SUCCESS)
+    {
+        return err_code;
+    }
+    NRF_LOG_INFO(" Characteristic Written %d", *new_sampling_interval);
 }
 
 /**@brief Function for handling the Connect event.
@@ -212,27 +314,18 @@ static void temperature_on_write(ble_temperature_service_t * p_cus, ble_evt_t co
     NRF_LOG_INFO("Temperature On Write.");
     ble_gatts_evt_write_t const * p_evt_write = &p_ble_evt->evt.gatts_evt.params.write;
     
-    // Custom Value Characteristic Written to.
-    if (p_evt_write->handle == p_cus->custom_value_handles.value_handle)
+    // Sampling Interval Value Characteristic Has Changed. 
+    if (p_evt_write->handle == p_cus->sampling_interval_handles.value_handle)
     {
-        if(*p_evt_write->data == 0x01)
-        {
-            NRF_LOG_INFO("LED_OFF");
-            led_off(); 
-        }
-        else if(*p_evt_write->data == 0x02)
-        {
-            NRF_LOG_INFO("LED_ON");
-            led_on(); 
-        }
-        else
-        {
-          NRF_LOG_INFO("Custom Value Characteristic Written to.");
-        }
+        temperature_evt_t evt;
+        evt.evt_type = TEMPERATURE_EVT_WRITE;
+
+        NRF_LOG_INFO("Custom Value Characteristic Written to.");
+        p_cus->evt_handler(p_cus, &evt);
     }
 
-    // Check if the Custom value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
-    if ((p_evt_write->handle == p_cus->custom_value_handles.cccd_handle) && (p_evt_write->len == 2))
+    // Check if the Temperature value CCCD is written to and that the value is the appropriate length, i.e 2 bytes.
+    if ((p_evt_write->handle == p_cus->temperature_value_handles.cccd_handle) && (p_evt_write->len == 2))
     {
         // CCCD written, call application event handler
         if (p_cus->evt_handler != NULL)
@@ -282,6 +375,7 @@ void ble_temperature_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context)
             NRF_LOG_INFO("TEMPERATURE_GATTS_EVT_WRITE");
             temperature_on_write(p_cus, p_ble_evt);
             break;
+
         // Handling this event is not necessary
         case BLE_GATTS_EVT_EXCHANGE_MTU_REQUEST:
             NRF_LOG_INFO("TEMPERATURE EXCHANGE_MTU_REQUEST event received.\r\n");
@@ -291,5 +385,3 @@ void ble_temperature_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context)
             break;
     }
 }
-
-//NRF_SDH_BLE_OBSERVER(_name, BLE_HRS_BLE_OBSERVER_PRIO, ble_temperature_on_ble_evt, NULL);

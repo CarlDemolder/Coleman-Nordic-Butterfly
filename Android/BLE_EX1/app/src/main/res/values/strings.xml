@@ -1,0 +1,62 @@
+<resources>
+    <string name="app_name">NRF52 Flexible Patch</string>
+    <string name="start_title">Wearable Sensors</string>
+    <string name="action_settings">Settings</string>
+    <string name="temp_name">Temperature</string>
+    <string name="uv_name">UV Power Density</string>
+    <string name="resp_name">Respiration</string>
+    <string name="battery_name">Battery</string>
+    <string name="start_scan">Start Scan</string>
+    <string name="stop_scan">Stop Scan</string>
+    <string name="save_name">Save</string>
+    <string name="start_recording">Start</string>
+    <string name="restart_recording">Restart</string>
+    <string name="stop_recording">Stop</string>
+    <string name="ble_name">BLE Device Search</string>
+    <string name="connect_btn_name">Connect to BLE Device</string>
+    <string name="label_device_address">Device Address</string>
+    <string name="label_state">State</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connect">Connect to Device</string>
+    <string name="connected">Connected</string>
+    <string name="connecting">Connecting...</string>
+    <string name="label_data">Data</string>
+    <string name="no_data">No Data</string>
+    <string name="select_uv_sensor">Select BLE Sensor</string>
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="title_devices">BLE Device Scan</string>
+    <string name="error_bluetooth_not_supported">Bluetooth not supported.</string>
+    <string name="continue_btn">Continue</string>
+
+    <string name="unknown_device">Unknown device</string>
+    <string name="unknown_characteristic">Unknown characteristic</string>
+    <string name="unknown_service">Unknown service</string>
+
+    <string name="menu_connect">Connect</string>
+    <string name="menu_disconnect">Disconnect</string>
+    <string name="menu_scan">Scan</string>
+    <string name="menu_start">Start</string>
+    <string name="menu_stop">Stop</string>
+
+    <string name="ble_device_name">BLE Device: </string>
+    <string name="ble_device_address">Address: </string>
+    <string name="ble_device_status">Status: </string>
+
+    <string name="ble_status_disconnected">Disconnected</string>
+    <string name="ble_status_connected">Connected</string>
+
+    <string name="sampling_rate_title_text">Sampling Rate</string>
+
+    <string-array name="sampling_rate_array">
+        <item>10 (s)</item>
+        <item>30 (s)</item>
+        <item>1 (mins)</item>
+        <item>5 (mins)</item>
+        <item>10 (mins)</item>
+        <item>30 (mins)</item>
+        <item>1 (hour)</item>
+        <item>5 (hours)</item>
+
+    </string-array>
+
+</resources>
