@@ -10,11 +10,11 @@
 
 #define MIN_CONN_INTERVAL               MSEC_TO_UNITS(3995, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.1 seconds). */
 #define MAX_CONN_INTERVAL               MSEC_TO_UNITS(3995, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.2 second). */
-#define SLAVE_LATENCY                   1                                       /**< Slave latency. */
+#define SLAVE_LATENCY                   1                                        /**< Slave latency. */
 #define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(32000, UNIT_10_MS)         /**< Connection supervisory timeout (21 seconds). */
 
-#define FIRST_CONN_PARAMS_UPDATE_DELAY  APP_TIMER_TICKS(5000)                   /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
-#define NEXT_CONN_PARAMS_UPDATE_DELAY   APP_TIMER_TICKS(30000)                  /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
+#define FIRST_CONN_PARAMS_UPDATE_DELAY  RTC_TIMER_TICKS(5000)                   /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
+#define NEXT_CONN_PARAMS_UPDATE_DELAY   RTC_TIMER_TICKS(30000)                  /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
 #define MAX_CONN_PARAMS_UPDATE_COUNT    1                                       /**< Number of attempts before giving up the connection parameter negotiation. */
 
 #define SEC_PARAM_BOND                  1                                       /**< Perform bonding. */
@@ -181,8 +181,40 @@ void gap_params_init(void)
 
     err_code = sd_ble_gap_ppcp_set(&gap_conn_params);
     APP_ERROR_CHECK(err_code);
+    if(err_code == NRF_SUCCESS)
+    {
+        NRF_LOG_INFO("Procedure request succeeded. Connection parameters will be negotiated as requested.");
+    }
+    else
+    {
+        NRF_LOG_INFO("Procedure request failed: %d", err_code);
+    }
 }
 
+void gap_params_update(uint16_t m_conn_handle)
+{
+    NRF_LOG_DEBUG("Gap Parameters Initialized");
+    ret_code_t              err_code;
+    ble_gap_conn_params_t   gap_conn_params;
+
+    memset(&gap_conn_params, 0, sizeof(gap_conn_params));
+
+    gap_conn_params.min_conn_interval = MIN_CONN_INTERVAL;
+    gap_conn_params.max_conn_interval = MAX_CONN_INTERVAL;
+    gap_conn_params.slave_latency     = SLAVE_LATENCY;
+    gap_conn_params.conn_sup_timeout  = CONN_SUP_TIMEOUT;
+
+    err_code = ble_conn_params_change_conn_params(m_conn_handle, &gap_conn_params);
+    APP_ERROR_CHECK(err_code);
+    if(err_code == NRF_SUCCESS)
+    {
+        NRF_LOG_INFO("GAP connection parameters updated.");
+    }
+    else
+    {
+        NRF_LOG_INFO("Procedure request failed: %d", err_code);
+    }
+}
 /**@brief Function for initializing the GATT module.
  */
 void gatt_init(void)
@@ -209,6 +241,7 @@ void on_temperature_evt(ble_temperature_service_t * p_cus_service, temperature_e
     {
         case TEMPERATURE_EVT_NOTIFICATION_ENABLED:
             NRF_LOG_DEBUG("ON_TEMPERATURE_EVENT NOTIFICATION ENABLED");
+            gap_params_update(m_conn_handle);
             rtc_start();
             break;
 
@@ -220,6 +253,7 @@ void on_temperature_evt(ble_temperature_service_t * p_cus_service, temperature_e
 
         case TEMPERATURE_EVT_CONNECTED:
             NRF_LOG_DEBUG("ON_TEMPERATURE_EVENT SERVICE CONNECTED");
+            rtc_restart();    // Restart the RTC Timer if the phone and sensor are disconnected
             break;
 
         case TEMPERATURE_EVT_DISCONNECTED:
@@ -361,8 +395,6 @@ void ble_evt_handler(ble_evt_t const * p_ble_evt, void * p_context)
     {
         case BLE_GAP_EVT_DISCONNECTED:
             NRF_LOG_INFO("BLE_EVT_Disconnected.");
-            kill_nrf52();   
-            // LED indication will be changed when advertising starts.
             break;
 
         case BLE_GAP_EVT_CONNECTED:

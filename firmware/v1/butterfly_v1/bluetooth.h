@@ -4,7 +4,6 @@
 #include "common.h"
 #include "ble_temperature_service.h"
 #include "clocks.h"
-#include "app_timer.h"
 
 #include "peer_manager.h"
 #include "peer_manager_handler.h"
@@ -20,6 +19,7 @@
 void nrf_qwr_error_handler(uint32_t nrf_error);
 void pm_evt_handler(pm_evt_t const * p_evt);
 void gap_params_init(void);
+void gap_params_update(uint16_t m_conn_handle);
 void gatt_init(void);
 void on_temperature_evt(ble_temperature_service_t * p_cus_service, temperature_evt_t * p_evt);
 void services_init(void);

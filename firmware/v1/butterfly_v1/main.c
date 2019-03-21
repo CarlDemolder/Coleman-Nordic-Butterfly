@@ -49,7 +49,7 @@ int main(void)
     advertising_start();
 
 //    // Turn off unneccessary pheripherals before entering main loop.
-//    i2c_stop();           // Turn off the TWI Pheripheral Module
+    i2c_stop();           // Turn off the TWI Pheripheral Module
 //    hfclock_stop();       // Stop the HF Crystal Clock
 
     for (;;)

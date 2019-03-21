@@ -22,6 +22,7 @@ void hardware_init(void)
 
 void kill_nrf52(void)
 {
+    NRF_LOG_INFO("kill NRF52");
     nrf_gpio_pin_write(LDO_EN_PIN, 0);     // Disabling the LDO to kill the MCU
 }
 

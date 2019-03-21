@@ -118,7 +118,6 @@ Output/ble_app_template_pca10040_s132\ Release/Obj/clocks.o: \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/ble/nrf_ble_gatt/nrf_ble_gatt.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/ble/nrf_ble_qwr/nrf_ble_qwr.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/pwr_mgmt/nrf_pwr_mgmt.h \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/timer/app_timer.h \
  C:\Users\cdemolde\Documents\GitHub\Coleman-Nordic-Butterfly\firmware\v1\butterfly_v1\TMP116.h \
  C:\Users\cdemolde\Documents\GitHub\Coleman-Nordic-Butterfly\firmware\v1\butterfly_v1\i2c.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/include/nrfx_twim.h \

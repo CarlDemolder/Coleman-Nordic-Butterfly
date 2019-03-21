@@ -7,7 +7,6 @@
 #include "nrfx_power_clock.h"
 
 
-
 void power_init(void);
 void sleep_mode_on_enter(void);
 void deep_sleep_mode_enter(void);

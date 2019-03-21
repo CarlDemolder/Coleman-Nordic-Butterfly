@@ -4,6 +4,7 @@
  <Breakpoints groups="Breakpoints" active_group="Breakpoints">
   <BreakpointListItem trigger="" line="229" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="../../../../../../components/softdevice/common/nrf_sdh_ble.c" useHWbreakpoint="false"/>
   <BreakpointListItem trigger="" line="239" counter="0" hardwareBreakpoint="" isFunctionBreakpoint="false" action="" expression="" group="Breakpoints" type="Breakpoint" state="4" filename="../../../../../../components/softdevice/common/nrf_sdh_ble.c" useHWbreakpoint="false"/>
+  <Exceptions set="MemManage;UsageFault_Coprocessor;UsageFault_CheckingError;UsageFault_StateError;BusFault;ExceptionEntryReturnFault;HardFault"/>
  </Breakpoints>
  <ExecutionProfileWindow/>
  <FrameBufferWindow>
@@ -25,6 +26,7 @@
   <ProjectSessionItem path="ble_app_template_pca10040_s132"/>
   <ProjectSessionItem path="ble_app_template_pca10040_s132;ble_app_template_pca10040_s132"/>
   <ProjectSessionItem path="ble_app_template_pca10040_s132;ble_app_template_pca10040_s132;Application"/>
+  <ProjectSessionItem path="ble_app_template_pca10040_s132;ble_app_template_pca10040_s132;nRF_BLE"/>
   <ProjectSessionItem path="ble_app_template_pca10040_s132;ble_app_template_pca10040_s132;nRF_Drivers"/>
   <ProjectSessionItem path="ble_app_template_pca10040_s132;ble_app_template_pca10040_s132;nRF_Libraries"/>
   <ProjectSessionItem path="ble_app_template_pca10040_s132;ble_app_template_pca10040_s132;nRF_SoftDevice"/>
@@ -60,11 +62,9 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="26" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="22" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="302" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../ble_temperature_service.c" selected="0" top="240" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="25" y="217" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../bluetooth.c" selected="1" top="180" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="19" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../common.c" selected="0" top="0" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../common.h" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="26" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../main.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="50" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../power.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="19" y="38" useTextEdit="1" useBinaryEdit="0" left="0" path="../../../common.h" selected="1" top="0" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="ble_app_template_pca10040_s132" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Release" debugSearchFileMap="" fileDialogInitialDirectory="C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/timer" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>

@@ -3,6 +3,7 @@
 const nrfx_rtc_t rtc = NRFX_RTC_INSTANCE(2); /**< Declaring an instance of nrfx_rtc for RTC1. RTC0 is reserved for Soft Device */
 
 uint8_t nrfx_rtc_is_running = 0;
+uint8_t nrfx_rtc_restart = 0;    // Constant used to restart RTC counter if the phone disconnects if already connected
 
 static app_rtc_handler_t m_app_rtc_handler;
 static app_clock_handler_t m_app_clock_handler;
@@ -129,6 +130,7 @@ void rtc_stop(void)
     {
         nrfx_rtc_disable(&rtc);        // Power off RTC instance
         nrfx_rtc_is_running = 0;
+        nrfx_rtc_restart = 1;
         NRF_LOG_INFO("RTC Disabled");
     }
 }
@@ -144,4 +146,18 @@ void rtc_start(void)
         nrfx_rtc_is_running = 1;
         NRF_LOG_INFO("RTC Enabled");
     }
-}    
+}
+
+void rtc_restart(void)
+{
+    NRF_LOG_INFO("rtc_restart");
+    if(!nrfx_rtc_is_running && nrfx_rtc_restart)
+    {
+        nrfx_rtc_enable(&rtc);        // Power on RTC instance
+        nrfx_rtc_int_enable(&rtc, NRF_RTC_INT_COMPARE2_MASK);
+        nrfx_rtc_tick_enable(&rtc, true);
+        nrfx_rtc_is_running = 1;
+        nrfx_rtc_restart = 0;
+        NRF_LOG_INFO("RTC Restarted");
+    }
+}

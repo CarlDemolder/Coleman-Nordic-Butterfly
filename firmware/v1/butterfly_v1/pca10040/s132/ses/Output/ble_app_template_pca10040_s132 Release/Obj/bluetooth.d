@@ -126,5 +126,4 @@ Output/ble_app_template_pca10040_s132\ Release/Obj/bluetooth.o: \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/hal/nrf_clock.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/include/nrfx_power_clock.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/include/nrfx_rtc.h \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/hal/nrf_rtc.h \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/timer/app_timer.h
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/hal/nrf_rtc.h
