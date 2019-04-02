@@ -100,7 +100,6 @@ void rtc_handler(nrfx_rtc_int_type_t int_type)
 
         ret_code_t err_code;
         
-        led_blink(500, 500);
         i2c_start();      // Powering on the I2C Module
         configure_tmp116(1);    // Setting the TMP116 to Automatic mode
         uint8_t tmp116_uint8_t[5];

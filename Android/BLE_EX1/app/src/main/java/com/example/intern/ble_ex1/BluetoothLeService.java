@@ -416,7 +416,7 @@ public class BluetoothLeService extends Service
 
     public void writeDescriptorNotification(BluetoothGatt mBluetoothGatt, boolean temp_Notification)
     {
-        Log.d(TAG, "UV: writeDescriptorNotification");
+        Log.d(TAG, "UV: writeDescriptorNotification " + temp_Notification);
         if (mBluetoothAdapter == null || mBluetoothGatt == null)
         {
             Log.d(TAG, "UV: BluetoothAdapter not initialized");
@@ -433,7 +433,7 @@ public class BluetoothLeService extends Service
             temp_byteVal[0] = 0;
         }
         temp_byteVal[1] = 0;
-        Log.d(TAG, String.format("UV: Temperature Notification: %b", temp_byteVal[0]));
+        Log.d(TAG, "UV: Temperature Notification: " + temp_byteVal[0]);
         mTemperatureCccd.setValue(temp_byteVal);
         writeGattDescriptor(mBluetoothGatt, mTemperatureCccd);
     }

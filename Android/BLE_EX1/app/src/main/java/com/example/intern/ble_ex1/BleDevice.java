@@ -228,10 +228,7 @@ public class BleDevice implements Parcelable
     {
         Log.d(TAG, "UV: resetGattDescriptors");
         setRecordingFlags();
-//        Log.d(TAG, String.format("UV: Connection State %b",mBl));
-//        mBluetoothLeService.writeGattCharacteristicNotification(mBluetoothGatt, getUVNotification(), getTemperatureNotification(), getBatteryNotification());
-//        writingDescriptor = true;
-//        mBluetoothLeService.writeDescriptorNotification(mBluetoothGatt, uv_Notification, temp_Notification, battery_Notification);
+        mBluetoothLeService.writeDescriptorNotification(mBluetoothGatt, temp_Notification);
     }
 
     void destroyDevice()
@@ -279,6 +276,7 @@ public class BleDevice implements Parcelable
     void setTemperatureNotification(boolean temp_Boolean)
     {
         temp_Notification = temp_Boolean;
+        Log.d(TAG, "UV: setTemperatureNotification " + temp_Boolean);
     }
 
     boolean getTemperatureNotification()

@@ -395,8 +395,8 @@ public class MainActivity extends AppCompatActivity
             emailIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
 
             emailIntent.setType("vnd.android.cursor.dir/email");        // set the type to 'email'
-            String to[] = {"CarlDemolder@gmail.com"};
-//            String to[] = {"Linda.Franck@ucsf.edu"};
+//            String to[] = {"CarlDemolder@gmail.com"};
+            String to[] = {"Linda.Franck@ucsf.edu"};
             emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
             emailIntent.putExtra(Intent.EXTRA_STREAM, path);        // the attachment
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Temperature Test Data");     // the mail subject
@@ -432,8 +432,16 @@ public class MainActivity extends AppCompatActivity
         // Only Writes to Descriptors, not the characteristic to enable Notifications from the device to the phone
         for(int i = 0; i < connectedBleSensors.size(); i++)
         {
-            connectedBleSensors.get(i).destroyDevice();
             connectedBleSensors.get(i).resetGattDescriptors();
+//            connectedBleSensors.get(i).destroyDevice();
+        }
+    }
+
+    public void destroyDevices()
+    {
+        for(int i = 0; i < connectedBleSensors.size(); i++)
+        {
+            connectedBleSensors.get(i).destroyDevice();
         }
     }
 

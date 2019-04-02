@@ -1,6 +1,6 @@
 #include "bluetooth.h"
 
-#define DEVICE_NAME                     "Butterfly_v1"                          /**< Name of device. Will be included in the advertising data. */
+#define DEVICE_NAME                     "Butterfly_v1a"                          /**< Name of device. Will be included in the advertising data. */
 #define MANUFACTURER_NAME               "Coleman Lab"                           /**< Manufacturer. Will be passed to Device Information Service. */
 #define APP_ADV_INTERVAL                1600                                     /**< The advertising interval (in units of 0.625 ms. This value corresponds to 187.5 ms). */
 
@@ -11,7 +11,7 @@
 #define MIN_CONN_INTERVAL               MSEC_TO_UNITS(3995, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.1 seconds). */
 #define MAX_CONN_INTERVAL               MSEC_TO_UNITS(3995, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.2 second). */
 #define SLAVE_LATENCY                   1                                        /**< Slave latency. */
-#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(32000, UNIT_10_MS)         /**< Connection supervisory timeout (21 seconds). */
+#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(32000, UNIT_10_MS)         /**< Connection supervisory timeout (10 seconds). */
 
 #define FIRST_CONN_PARAMS_UPDATE_DELAY  RTC_TIMER_TICKS(5000)                   /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
 #define NEXT_CONN_PARAMS_UPDATE_DELAY   RTC_TIMER_TICKS(30000)                  /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
@@ -374,7 +374,7 @@ void on_adv_evt(ble_adv_evt_t ble_adv_evt)
 
         case BLE_ADV_EVT_IDLE:
             NRF_LOG_INFO("BLE advertising idle.");
-//            kill_nrf52();   // Disabling the LDO to kill the MCU
+            kill_nrf52();   // Disabling the LDO to kill the MCU
             break;
 
         default:
@@ -496,8 +496,8 @@ void peer_manager_init(void)
 void advertising_init(void)
 {
     NRF_LOG_DEBUG("Advertising Initialized");
-    ret_code_t             err_code;
-    ble_advertising_init_t adv_init;
+    ret_code_t                    err_code;
+    ble_advertising_init_t        adv_init;
 
     memset(&adv_init, 0, sizeof(adv_init));
 

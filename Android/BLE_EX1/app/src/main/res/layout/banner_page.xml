@@ -17,7 +17,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:textColor="@color/BLUE"
                 android:textSize="40sp"
                 android:layout_gravity="center"
@@ -27,17 +27,27 @@
                 android:id="@+id/imageView"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
-                android:layout_weight="5"
+                android:layout_weight="10"
                 android:layout_gravity="center_horizontal"
                 app:srcCompat="@mipmap/logo_1"/>
 
         <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:text="@string/continue_btn"
                 android:id="@+id/continueBtn"
                 android:layout_gravity="center_horizontal"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/BLACK"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:gravity="center_vertical"
+                android:text="@string/hardware_version_number"/>
 
     </LinearLayout>
 
