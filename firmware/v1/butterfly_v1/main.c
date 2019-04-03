@@ -46,6 +46,7 @@ int main(void)
 
     // Start execution.
     NRF_LOG_INFO("Nordic Butterfly started.");
+    set_hardware_version();
     advertising_start();
 
 //    // Turn off unneccessary pheripherals before entering main loop.

@@ -33,4 +33,5 @@ void peer_manager_init(void);
 void advertising_init(void);
 void advertising_start(void);
 void update_temperature_characteristic(uint8_t* tmp116_uint8_t);
+void set_hardware_version(void);
 #endif /*__BLUETOOTH_H__*/

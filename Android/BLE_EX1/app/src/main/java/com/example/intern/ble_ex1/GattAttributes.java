@@ -30,6 +30,7 @@ public class GattAttributes
     static String TEMPERATURE = "8AAD46AA-3830-45EE-A13E-74F0B01013CE";
     static String TEMPERATURE_CCC = "00002902-0000-1000-8000-00805f9b34fb";
     static String SAMPLING_RATE = "8AAD46AB-3830-45EE-A13E-74F0B01013CE";
+    static String HARDWARE_VERSION = "8AAD46AC-3830-45EE-A13E-74F0B01013CE";
 
     static
     {
@@ -38,6 +39,7 @@ public class GattAttributes
         //Characteristics
         attributes.put(TEMPERATURE, "Body Temperature Measurement");        //Body Temperature Measurement for Body Temperature Service
         attributes.put(SAMPLING_RATE, "Sampling Rate");                     //Sampling Rate for Configuration Service
+        attributes.put(HARDWARE_VERSION, "Hardware Version");                     //Hardware version for Configuration Service
         //Client Characteristic Configuration
         attributes.put(TEMPERATURE_CCC, "Body Temperature Client Configuration");        //Body Temperature Client Configuration for Body Temperature Service
     }

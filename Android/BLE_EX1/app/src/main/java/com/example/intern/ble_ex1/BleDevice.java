@@ -29,6 +29,8 @@ public class BleDevice implements Parcelable
     private String bleAddress;
     private String bleName;
 
+    private String hardwareVersion;
+
     private boolean temp_Notification;
 
     private boolean temp_Recording;
@@ -57,6 +59,7 @@ public class BleDevice implements Parcelable
 
     private int mDataMode;      // data_mode is used to determine which variable is changing state at a current set point
     private static final int MODE_TEMPERATURE = 1;
+    private static final int MODE_HARDWARE_VERSION = 2;
 
     @Override
     public int describeContents()
@@ -70,6 +73,7 @@ public class BleDevice implements Parcelable
         parcelDestination.writeString(bleAddress);      // Place BLE Address into Parcel
         parcelDestination.writeString(bleName);         // Place BLE Name into Parcel
         parcelDestination.writeString(connectionState);     // Place BLE Connection State into Parcel
+        parcelDestination.writeString(hardwareVersion);     // Place Hardware Version into Parcel
         parcelDestination.writeByte((byte) (temp_Notification ? 1 : 0));        // Place Temperature Notification into Parcel
         parcelDestination.writeByte((byte) (temp_Recording ? 1 : 0));        // Place Temperature Recording Flag into Parcel
         parcelDestination.writeInt(samplingRate);               // Place Sampling Rate Int into Parcel
@@ -86,6 +90,7 @@ public class BleDevice implements Parcelable
         bleAddress = parcel.readString();                   // Get the BLE Address from the Parcel
         bleName = parcel.readString();                      // Get the BLE Name from the Parcel
         connectionState = parcel.readString();              // Get the BLE Connection State into Parcel
+        hardwareVersion = parcel.readString();              // Get the Hardware Version into Parcel
         temp_Notification = parcel.readByte() != 0;         // Get the Temperature Notification from the Parcel
         temp_Recording = parcel.readByte() != 0;            // Get the Temperature Recording Flag from the Parcel
         samplingRate = parcel.readInt();                    // Get the Sampling Rate from the Parcel
@@ -133,6 +138,7 @@ public class BleDevice implements Parcelable
     {
         counter = 0;
         maxDataSet = 10000;
+        hardwareVersion = "v0X.0";
         temp_Notification = false;
 
         temp_Recording = false;
@@ -329,6 +335,17 @@ public class BleDevice implements Parcelable
         return counter_array.size();
     }
 
+    void setHardwareVersion(String tempHardwareVersion)
+    {
+        Log.d(TAG, "UV: Setting Hardware Version");
+        hardwareVersion = tempHardwareVersion;
+    }
+
+    String getHardwareVersion()
+    {
+        return hardwareVersion;
+    }
+
     // Convert String Data to Int Data and Save Data to Graph
     private void recordData(String gattValue, int characteristic_type)
     {
@@ -468,14 +485,6 @@ public class BleDevice implements Parcelable
         }
 
         @Override
-        public void onCharacteristicRead(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic characteristic, int status)
-        {
-            Log.d(TAG, "UV: onCharacteristicRead");
-            super.onCharacteristicRead(mBluetoothGatt, characteristic, status);
-            mBluetoothLeService.onCharacteristicRead(mBluetoothGatt, status);
-        }
-
-        @Override
         public void onCharacteristicChanged(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic characteristic)
         {
             if(!writingDescriptor)
@@ -483,13 +492,12 @@ public class BleDevice implements Parcelable
                 Log.d(TAG, String.format("UV: onCharacteristicChanged %s", mBluetoothGatt.getDevice().getAddress()));
                 super.onCharacteristicChanged(mBluetoothGatt, characteristic);
                 int characteristic_mode = mBluetoothLeService.onCharacteristicChanged(characteristic);
-                String gattValue = "";
                 if (characteristic_mode == MODE_TEMPERATURE)
                 {
-                    gattValue = mBluetoothLeService.getmTemperatureValue();
+                    String gattValue = mBluetoothLeService.getmTemperatureValue();
+                    recordData(gattValue, characteristic_mode);
+                    mBluetoothLeService.broadcastUpdate(ACTION_DATA_AVAILABLE, mBluetoothGatt.getDevice().getAddress());
                 }
-                recordData(gattValue, characteristic_mode);
-                mBluetoothLeService.broadcastUpdate(ACTION_DATA_AVAILABLE, mBluetoothGatt.getDevice().getAddress());
             }
         }
 
@@ -507,6 +515,24 @@ public class BleDevice implements Parcelable
         }
 
         @Override
+        public void onCharacteristicRead(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic characteristic, int status)
+        {
+            Log.d(TAG, "UV: onCharacteristicRead");
+            super.onCharacteristicRead(mBluetoothGatt, characteristic, status);
+            if(mBluetoothLeService.onCharacteristicRead(status))
+            {
+                Log.d(TAG, "UV: all Characteristics have been Read from");
+                int characteristic_mode = mBluetoothLeService.onCharacteristicChanged(characteristic);
+                if(characteristic_mode == MODE_HARDWARE_VERSION)
+                {
+                    String gattValue = mBluetoothLeService.getmHardwareVersionValue();
+                    setHardwareVersion(gattValue);
+                    mBluetoothLeService.broadcastUpdate(EXTRA_DATA, mBluetoothGatt.getDevice().getAddress());
+                }
+            }
+        }
+
+        @Override
         public void onDescriptorWrite(BluetoothGatt mBluetoothGatt, BluetoothGattDescriptor descriptor, int status)
         {
             Log.d(TAG, "UV: onDescriptorWrite");
@@ -515,6 +541,7 @@ public class BleDevice implements Parcelable
             {
                 Log.d(TAG, "UV: all Descriptors have been written");
                 writingDescriptor = false;
+                mBluetoothLeService.readCharacteristicHardwareVersion(mBluetoothGatt);
             }
         }
     };

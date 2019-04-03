@@ -35,6 +35,7 @@
 #define TEMPERATURE_SERVICE_UUID            0x8CD4
 #define TEMPERATURE_CHAR_UUID               0x46AA
 #define SAMPLING_INTERVAL_CHAR_UUID         0x46AB
+#define HARDWARE_VERSION_CHAR_UUID          0x46AC
 
 typedef struct ble_temperature_service_s ble_temperature_service_t;   // Forward declaration of the ble_cus_t type.
 
@@ -67,6 +68,7 @@ struct ble_temperature_service_s
     uint16_t                      service_handle;                 /**< Handle of Custom Service (as provided by the BLE stack). */
     ble_gatts_char_handles_t      temperature_value_handles;           /**< Handles related to the Temperature Value characteristic. */
     ble_gatts_char_handles_t      sampling_interval_handles;           /**< Handles related to the Sampling Interval Value characteristic. */
+    ble_gatts_char_handles_t      hardware_version_handles;           /**< Handles related to the Hardware Version Value characteristic. */
     uint16_t                      conn_handle;                    /**< Handle of the current connection (as provided by the BLE stack, is BLE_CONN_HANDLE_INVALID if not in a connection). */
     uint8_t                       uuid_type; 
 };
@@ -78,15 +80,18 @@ typedef struct
     temperature_evt_handler_t         evt_handler; /**< Event handler to be called for handling events in the Custom Service. */
     uint8_t                           temperature_value[5];           /**< Initial custom value */
     uint8_t                           sampling_interval_value;          /**< Sampling interval value in seconds */  
+    uint8_t                           hardware_version[5];           /**< Hardware Version Number */
     ble_srv_cccd_security_mode_t      custom_value_char_attr_md;     /**< Initial security level for Custom characteristics attribute */
 } ble_temperature_service_init_t;
 
 
 void ble_temperature_on_ble_evt(ble_evt_t const * p_ble_evt, void * p_context);
-uint32_t temperature_custom_value_update(ble_temperature_service_t * p_cus, uint8_t* array_data);
+uint32_t temperature_custom_value_update(ble_temperature_service_t * p_cus, uint8_t * array_data);
+uint32_t hardware_version_value_update(ble_temperature_service_t * p_cus, uint8_t * array_data);
 uint32_t sampling_interval_value_update(ble_temperature_service_t * p_cus, uint8_t * new_sampling_interval);
 uint32_t ble_temperature_service_initialize(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init);
 uint32_t temperature_value_char_add(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init);
+uint32_t hardware_version_char_add(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init);
 uint32_t sampling_interval_value_char_add(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init);
 #endif // BLE_TEMPERATURE_SERVICE_H__
 

@@ -104,39 +104,47 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public void onBackPressed()
     {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-
-        menu.findItem(R.id.menu_connect).setEnabled(false);
-        menu.findItem(R.id.menu_disconnect).setEnabled(true);
-
-        return true;
+        super.onBackPressed();
+        startActivity(new Intent(this, DeviceScanActivity.class));
+        finish();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case R.id.menu_connect:
-                for(int i = 0; i < connectedBleSensors.size(); i++)
-                {
-                    connectedBleSensors.get(i).connectBleDevice();
-                }
-                return true;
-            case R.id.menu_disconnect:
-                for(int i = 0; i < connectedBleSensors.size(); i++)
-                {
-                    connectedBleSensors.get(i).disconnectBleDevice();
-                }
-                return true;
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu)
+//    {
+//        getMenuInflater().inflate(R.menu.menu_main, menu);
+//
+//        menu.findItem(R.id.menu_connect).setEnabled(false);
+//        menu.findItem(R.id.menu_disconnect).setEnabled(true);
+//
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item)
+//    {
+//        switch(item.getItemId())
+//        {
+//            case R.id.menu_connect:
+//                for(int i = 0; i < connectedBleSensors.size(); i++)
+//                {
+//                    connectedBleSensors.get(i).connectBleDevice();
+//                }
+//                return true;
+//            case R.id.menu_disconnect:
+//                for(int i = 0; i < connectedBleSensors.size(); i++)
+//                {
+//                    connectedBleSensors.get(i).disconnectBleDevice();
+//                }
+//                return true;
+//            case android.R.id.home:
+//                onBackPressed();
+//                return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     private void bindGattService()
     {
@@ -217,6 +225,7 @@ public class MainActivity extends AppCompatActivity
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED);
         intentFilter.addAction(BluetoothLeService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(BluetoothLeService.EXTRA_DATA);
         return intentFilter;
     }
 
@@ -267,6 +276,9 @@ public class MainActivity extends AppCompatActivity
                             ((SubActivity) viewPagerAdapter.getItem(i)).updateGraph();      // Update Graph
                             break;
 
+                        case BluetoothLeService.EXTRA_DATA:
+                            Log.d(TAG, String.format("UV: BLE GATT Extra Data Available %s", connectedBleSensors.get(i).getBleName()));
+                            ((SubActivity) viewPagerAdapter.getItem(i)).updateHardwareVersion();      // Update Hardware Version
                         default:
                             break;
                     }

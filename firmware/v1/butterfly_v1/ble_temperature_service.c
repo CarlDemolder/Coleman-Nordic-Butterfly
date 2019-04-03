@@ -55,6 +55,13 @@ uint32_t ble_temperature_service_initialize(ble_temperature_service_t * p_cus, c
         NRF_LOG_INFO("DID NOT CREATE TEMPERATURE CHARACTERISTIC PROPERLY");
         return err_code;
     }
+
+    err_code = hardware_version_char_add(p_cus, p_cus_init);
+    if (err_code != NRF_SUCCESS)
+    {
+        NRF_LOG_INFO("DID NOT CREATE TEMPERATURE CHARACTERISTIC PROPERLY");
+        return err_code;
+    }
 }
 
 
@@ -194,6 +201,70 @@ uint32_t sampling_interval_value_char_add(ble_temperature_service_t * p_cus, con
     return NRF_SUCCESS;
 }
 
+/**@brief Function for adding the Hardware version characteristic.
+ *
+ * @param[in]   p_cus        Temperature Service structure.
+ * @param[in]   p_cus_init   Information needed to initialize the service.
+ *
+ * @return      NRF_SUCCESS on success, otherwise an error code.
+ */
+uint32_t hardware_version_char_add(ble_temperature_service_t * p_cus, const ble_temperature_service_init_t * p_cus_init)
+{
+    NRF_LOG_INFO("Hardware Version Characteristic Add.");
+    // Local Variables to the function
+    uint32_t                err_code;
+    ble_gatts_char_md_t     char_md;
+    ble_gatts_attr_t        attr_char_value;
+    ble_uuid_t              ble_uuid;
+    ble_gatts_attr_md_t     attr_md;
+
+    // char_md is the variable used to define the properties that will be displayed to the central during service discovery
+    memset(&char_md, 0, sizeof(char_md));
+
+    char_md.char_props.read   = 1;
+    char_md.char_props.write  = 0;
+    char_md.p_char_user_desc  = NULL;
+    char_md.p_char_pf         = NULL;
+    char_md.p_user_desc_md    = NULL;
+    char_md.p_cccd_md         = NULL; 
+    char_md.p_sccd_md         = NULL;
+
+    ble_uuid.type = p_cus->uuid_type;
+    ble_uuid.uuid = HARDWARE_VERSION_CHAR_UUID;
+
+    // attr_md is the variable that sets the properties of the attribute, or the accessability of the attribute
+    // .vloc option is set to BLE_GATTS_VLOC_STACK as we want the characteristic to be stored in the SoftDevice RAM section,
+    // and not in the Application RAM section
+    memset(&attr_md, 0, sizeof(attr_md));
+
+        //  Read  operation on cccd should be possible without authentication.
+    BLE_GAP_CONN_SEC_MODE_SET_OPEN(&attr_md.read_perm);
+    BLE_GAP_CONN_SEC_MODE_SET_NO_ACCESS(&attr_md.write_perm);
+
+    attr_md.read_perm  = p_cus_init->custom_value_char_attr_md.read_perm;
+    attr_md.write_perm = p_cus_init->custom_value_char_attr_md.write_perm;;
+    attr_md.vloc       = BLE_GATTS_VLOC_STACK;
+    attr_md.rd_auth    = 0;
+    attr_md.wr_auth    = 0;
+    attr_md.vlen       = 0;
+
+    memset(&attr_char_value, 0, sizeof(attr_char_value));
+
+    attr_char_value.p_uuid    = &ble_uuid;
+    attr_char_value.p_attr_md = &attr_md;
+    attr_char_value.init_len  = sizeof(uint8_t)*5;
+    attr_char_value.init_offs = 0;
+    attr_char_value.max_len   = sizeof(uint8_t)*5;
+
+    err_code = sd_ble_gatts_characteristic_add(p_cus->service_handle, &char_md, &attr_char_value, &p_cus->hardware_version_handles);
+    if (err_code != NRF_SUCCESS)
+    {
+        return err_code;
+    }
+
+    return NRF_SUCCESS;
+}
+
 uint32_t temperature_custom_value_update(ble_temperature_service_t * p_cus, uint8_t* array_data)
 {
     NRF_LOG_INFO("In temperature_custom_value_update. \r\n"); 
@@ -268,6 +339,33 @@ uint32_t sampling_interval_value_update(ble_temperature_service_t * p_cus, uint8
         return err_code;
     }
     NRF_LOG_INFO(" Characteristic Written %d", *new_sampling_interval);
+}
+
+uint32_t hardware_version_value_update(ble_temperature_service_t * p_cus, uint8_t* array_data)
+{
+    NRF_LOG_INFO("In hardware_version_update. \r\n"); 
+    if (p_cus == NULL)
+    {
+        return NRF_ERROR_NULL;
+    }
+
+    uint32_t err_code = NRF_SUCCESS;
+    ble_gatts_value_t gatts_value;
+
+    // Initialize value struct.
+    memset(&gatts_value, 0, sizeof(gatts_value));
+
+    gatts_value.len     = sizeof(uint8_t)*5;
+    gatts_value.offset  = 0;
+    gatts_value.p_value = array_data;
+
+    // Update database.
+    err_code = sd_ble_gatts_value_set(p_cus->conn_handle, p_cus->hardware_version_handles.value_handle, &gatts_value);
+    if (err_code != NRF_SUCCESS)
+    {
+        return err_code;
+    }
+    return err_code;
 }
 
 /**@brief Function for handling the Connect event.

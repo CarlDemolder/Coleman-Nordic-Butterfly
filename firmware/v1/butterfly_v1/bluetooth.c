@@ -11,7 +11,7 @@
 #define MIN_CONN_INTERVAL               MSEC_TO_UNITS(3995, UNIT_1_25_MS)        /**< Minimum acceptable connection interval (0.1 seconds). */
 #define MAX_CONN_INTERVAL               MSEC_TO_UNITS(3995, UNIT_1_25_MS)        /**< Maximum acceptable connection interval (0.2 second). */
 #define SLAVE_LATENCY                   1                                        /**< Slave latency. */
-#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(32000, UNIT_10_MS)         /**< Connection supervisory timeout (10 seconds). */
+#define CONN_SUP_TIMEOUT                MSEC_TO_UNITS(16000, UNIT_10_MS)         /**< Connection supervisory timeout (10 seconds). */
 
 #define FIRST_CONN_PARAMS_UPDATE_DELAY  RTC_TIMER_TICKS(5000)                   /**< Time from initiating event (connect or start of notification) to first time sd_ble_gap_conn_param_update is called (5 seconds). */
 #define NEXT_CONN_PARAMS_UPDATE_DELAY   RTC_TIMER_TICKS(30000)                  /**< Time between each call to sd_ble_gap_conn_param_update after the first call (30 seconds). */
@@ -532,5 +532,13 @@ void update_temperature_characteristic(uint8_t* tmp116_uint8_t)
     uint32_t err_code;
     memcpy(ble_temperature_init.temperature_value, tmp116_uint8_t, 5);
     err_code = temperature_custom_value_update(&m_ble_temperature_service, tmp116_uint8_t);   // Update the TMP116 Characteristic Value
+    APP_ERROR_CHECK(err_code);
+}
+
+void set_hardware_version(void)
+{
+    uint32_t err_code;
+    uint8_t hw_version[5] = HARDWARE_VERSION_NUMBER;
+    err_code = hardware_version_value_update(&m_ble_temperature_service, hw_version);   // Update the TMP116 Characteristic Value
     APP_ERROR_CHECK(err_code);
 }

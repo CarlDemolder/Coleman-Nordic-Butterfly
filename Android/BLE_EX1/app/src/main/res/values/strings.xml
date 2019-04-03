@@ -47,7 +47,11 @@
 
     <string name="sampling_rate_title_text">Sampling Rate</string>
 
-    <string name="hardware_version_number">v1.4</string>
+    <string name="software_version_number">v1.5</string>
+
+    <string name="hardware_version_title_text">Hardware Version:</string>
+    <string name="hardware_version_text">v0.0</string>
+    <string name="reset_sampling_interval">Reset Sampling Interval</string>
 
     <string-array name="sampling_rate_array">
         <item>10 (s)</item>

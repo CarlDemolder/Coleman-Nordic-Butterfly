@@ -47,7 +47,7 @@
                 android:textSize="20sp"
                 android:layout_gravity="center"
                 android:gravity="center_vertical"
-                android:text="@string/hardware_version_number"/>
+                android:text="@string/software_version_number"/>
 
     </LinearLayout>
 

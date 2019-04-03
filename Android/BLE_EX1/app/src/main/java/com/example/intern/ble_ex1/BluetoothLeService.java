@@ -40,6 +40,7 @@ public class BluetoothLeService extends Service
     // Bluetooth characteristics that we need to read/write
     private static BluetoothGattCharacteristic mTemperatureCharacteristic;  //Temperature Characteristic
     private static BluetoothGattCharacteristic mSamplingRateCharacteristic;     // Sampling Rate Characteristic
+    private static BluetoothGattCharacteristic mHardwareVersionCharacteristic;     // Hardware Version Characteristic
 
     // Bluetooth Custom Client Characteristic Configuration Descriptors
     private static BluetoothGattDescriptor mTemperatureCccd; //Temperature Custom Client Characteristic Configuration Descriptor
@@ -48,8 +49,10 @@ public class BluetoothLeService extends Service
     public final static UUID UUID_TEMPERATURE = UUID.fromString(GattAttributes.TEMPERATURE);
     public final static UUID UUID_TEMPERATURE_CCC = UUID.fromString(GattAttributes.TEMPERATURE_CCC);
     public final static UUID UUID_SAMPLING_RATE = UUID.fromString(GattAttributes.SAMPLING_RATE);
+    public final static UUID UUID_HARDWARE_VERSION = UUID.fromString(GattAttributes.HARDWARE_VERSION);
 
     private static String mTemperatureValue = "0";     //Temperature Notifications
+    private static String mHardwareVersionValue = "v0X.0";      // Hardware Version String Initialization
 
     public final static String ACTION_GATT_CONNECTED = "com.example.bluetooth.le.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED = "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED";
@@ -64,6 +67,7 @@ public class BluetoothLeService extends Service
     private static final int STATE_CONNECTED = 2;
 
     private static final int MODE_TEMPERATURE = 1;
+    private static final int MODE_HARDWARE_VERSION = 2;
 
     private Queue<BluetoothGattDescriptor> descriptorWriteQueue = new LinkedList<>();
     private Queue<BluetoothGatt> gattWriteQueue = new LinkedList<>();
@@ -75,6 +79,7 @@ public class BluetoothLeService extends Service
 
     private Queue<BluetoothGatt> gattReadQueue = new LinkedList<>();
     private Boolean isWriting = false;
+    private Boolean isReading = false;
 
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -86,8 +91,9 @@ public class BluetoothLeService extends Service
         mTempService = gatt.getService(UUID_SERVICE_BODY_TEMPERATURE);      //Body Temperature Service assigned to specific UUID
 
         // Linking UUID to Characteristics
-        mTemperatureCharacteristic = mTempService.getCharacteristic(UUID_TEMPERATURE);                          //Body Temperature Characteristics
-        mSamplingRateCharacteristic = mTempService.getCharacteristic(UUID_SAMPLING_RATE);              //Sampling Rate Characteristics
+        mTemperatureCharacteristic = mTempService.getCharacteristic(UUID_TEMPERATURE);                          // Body Temperature Characteristics
+        mSamplingRateCharacteristic = mTempService.getCharacteristic(UUID_SAMPLING_RATE);                       // Sampling Rate Characteristics
+        mHardwareVersionCharacteristic = mTempService.getCharacteristic(UUID_HARDWARE_VERSION);                 // Hardware Version Characteristics
 
         // Linking UUID to Custom Client Configuration Descriptors
         mTemperatureCccd = mTemperatureCharacteristic.getDescriptor(UUID_TEMPERATURE_CCC);          //Body Temperature Descriptor
@@ -98,6 +104,10 @@ public class BluetoothLeService extends Service
         return mTemperatureValue;
     }
 
+    public String getmHardwareVersionValue()
+    {
+        return mHardwareVersionValue;
+    }
 
     public void broadcastUpdate(final String action, final String ble_address)
     {
@@ -255,6 +265,21 @@ public class BluetoothLeService extends Service
         return  mBluetoothGatt;
     }
 
+    public void writeCharacteristicSamplingRate(BluetoothGatt mBluetoothGatt, int sampling_rate)
+    {
+        Log.d(TAG, "UV: writeCharacteristicNotification");
+        if (mBluetoothAdapter == null || mBluetoothGatt == null)
+        {
+            Log.d(TAG, "UV: BluetoothAdapter not initialized");
+            return;
+        }
+        byte[] samplingRate_byteVal = new byte[1];
+        samplingRate_byteVal[0] = (byte) sampling_rate;
+        mSamplingRateCharacteristic.setValue(samplingRate_byteVal);
+        boolean characteristic_status = writeGattCharacteristic(mBluetoothGatt, mSamplingRateCharacteristic);
+        Log.d(TAG, String.format("UV: Sampling Rate Characteristic: %b", characteristic_status));
+    }
+
     public boolean writeGattCharacteristic(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic characteristic)
     {
         Log.d(TAG, "UV: writeGattCharacteristic");
@@ -299,21 +324,6 @@ public class BluetoothLeService extends Service
         return characteristic_status;
     }
 
-    public void writeCharacteristicSamplingRate(BluetoothGatt mBluetoothGatt, int sampling_rate)
-    {
-        Log.d(TAG, "UV: writeCharacteristicNotification");
-        if (mBluetoothAdapter == null || mBluetoothGatt == null)
-        {
-            Log.d(TAG, "UV: BluetoothAdapter not initialized");
-            return;
-        }
-        byte[] samplingRate_byteVal = new byte[1];
-        samplingRate_byteVal[0] = (byte) sampling_rate;
-        mSamplingRateCharacteristic.setValue(samplingRate_byteVal);
-        boolean characteristic_status = writeGattCharacteristic(mBluetoothGatt, mSamplingRateCharacteristic);
-        Log.d(TAG, String.format("UV: Sampling Rate Characteristic: %b", characteristic_status));
-    }
-
     public boolean onCharacteristicWrite(int status)
     {
         isWriting = false;
@@ -335,37 +345,65 @@ public class BluetoothLeService extends Service
         return false;
     }
 
-    public void readCharacteristic(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic characteristic)
+    public void readCharacteristicHardwareVersion(BluetoothGatt mBluetoothGatt)
     {
-        if (mBluetoothAdapter == null || mBluetoothGatt == null)
-        {
-            Log.d(TAG, "UV: BluetoothAdapter not initialized");
-            return;
-        }
-
-        if((characteristicReadQueue.size() == 1) && (descriptorWriteQueue.size() == 0))
-        {
-            mBluetoothGatt.readCharacteristic(characteristic);
-        }
+        Log.d(TAG, "UV: readCharacteristicHardwareVersion");
+        boolean characteristic_status = readGattCharacteristic(mBluetoothGatt, mHardwareVersionCharacteristic);
+        Log.d(TAG, String.format("UV: Hardware Version Characteristic: %b", characteristic_status));
     }
 
-    public void onCharacteristicRead(BluetoothGatt mBluetoothGatt, int status)
+    public boolean readGattCharacteristic(BluetoothGatt mBluetoothGatt, BluetoothGattCharacteristic characteristic)
     {
-        //            characteristicReadQueue.remove();
-        if (status == BluetoothGatt.GATT_SUCCESS)
+        Log.d(TAG, "UV: readGattCharacteristic");
+        characteristicReadQueue.add(characteristic);   // Adding Characteristic to the Write Queue
+        gattReadQueue.add(mBluetoothGatt);     // Adding Bluetooth Gatt to  Write Queue
+        return readNextCharacteristicFromQueue();
+    }
+
+    private boolean readNextCharacteristicFromQueue()
+    {
+        if(isReading)
         {
-            Log.d(TAG, "UV: onCharacteristicRead");
-            broadcastUpdate(ACTION_DATA_AVAILABLE, mBluetoothGatt.getDevice().getAddress());
+            Log.d(TAG, "UV: isReading");
+            return false;
+        }
+        if(characteristicReadQueue.size() == 0)
+        {
+            return false;
+        }
+        isReading = true;
+        Log.d(TAG, String.format("UV: ReadNextCharacteristicFromQueue: %d", characteristicReadQueue.size()));
+        boolean characteristic_status = gattReadQueue.element().readCharacteristic(characteristicReadQueue.element());
+        if(!characteristic_status)
+        {
+            Log.d(TAG, "UV: Characteristic Read Failed");
         }
         else
         {
-            Log.d(TAG, "UV: onCharacteristicRead"+status);
+            Log.d(TAG, "UV: Characteristic Read Success!!");
         }
+        return characteristic_status;
+    }
 
-//            if(characteristicReadQueue.size() > 0)
-//            {
-//                mBluetoothGatt.readCharacteristic(characteristicReadQueue.element());
-//            }
+    public boolean onCharacteristicRead(int status)
+    {
+        isReading = false;
+        gattReadQueue.remove();        // Remove from the Queue the Gatt that was just read from
+        characteristicReadQueue.remove();  // Remove from the Queue the Characteristic that was just read from
+        readNextCharacteristicFromQueue();
+        if (status == BluetoothGatt.GATT_SUCCESS)
+        {
+            Log.d(TAG, "UV: Callback: Read GATT Characteristic successfully.");
+        }
+        else
+        {
+            Log.d(TAG, "UV: Callback: Error reading GATT Characteristic: "+ status);
+        }
+        if(characteristicReadQueue.size() == 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     public int onCharacteristicChanged(BluetoothGattCharacteristic characteristic)
@@ -377,6 +415,13 @@ public class BluetoothLeService extends Service
             mTemperatureValue = characteristic.getStringValue(0);
             Log.d(TAG, String.format("UV: Temperature Value: %s", mTemperatureValue));
             return MODE_TEMPERATURE;
+        }
+
+        if(UUID_HARDWARE_VERSION.equals(characteristic.getUuid()))
+        {
+            mHardwareVersionValue = characteristic.getStringValue(0);
+            Log.d(TAG, String.format("UV: HardwareVersionValue: %s", mHardwareVersionValue));
+            return MODE_HARDWARE_VERSION;
         }
         return 0;
     }

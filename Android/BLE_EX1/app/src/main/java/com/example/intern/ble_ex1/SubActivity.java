@@ -45,6 +45,7 @@ public class SubActivity extends Fragment
     private TextView connectionState;
     private TextView deviceAddress;
     private TextView deviceName;
+    private TextView hardwareVersionTextView;
 
     public SubActivity()
     {
@@ -88,6 +89,9 @@ public class SubActivity extends Fragment
         deviceAddress.setText(connectedBleSensor.getBleAddress());
         connectionState = subTabView.findViewById(R.id.ble_device_status);   //Sets the Text of the Device Connection Status
         connectionState.setText(connectedBleSensor.getConnectionState());
+
+        hardwareVersionTextView = subTabView.findViewById(R.id.hardwareVersionTextView);
+        hardwareVersionTextView.setText(connectedBleSensor.getHardwareVersion());
 
         return subTabView;
     }
@@ -133,7 +137,6 @@ public class SubActivity extends Fragment
         }
     }
 
-
     // Convert String Data to Int Data and Save Data to Graph
     public void updateGraph()
     {
@@ -167,5 +170,11 @@ public class SubActivity extends Fragment
         {
             connectionState.setText(R.string.connected);
         }
+    }
+
+    public void updateHardwareVersion()
+    {
+        Log.d(TAG, "UV: updateHardwareVersion");
+        hardwareVersionTextView.setText(connectedBleSensor.getHardwareVersion());
     }
 }
