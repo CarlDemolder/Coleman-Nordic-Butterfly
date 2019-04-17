@@ -144,7 +144,7 @@ public class SubActivity extends Fragment
         if(connectedBleSensor.getTemperatureFlag())
         {
             DataPoint values = new DataPoint(connectedBleSensor.getCounter(), connectedBleSensor.getTempValue());
-            if(connectedBleSensor.getCounterArrayLength() < 10)
+            if(connectedBleSensor.getCounterArrayLength() <= 10)
             {
                 temp_series.appendData(values, false, maxDataSet);
             }

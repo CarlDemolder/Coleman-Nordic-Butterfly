@@ -218,16 +218,12 @@ public class BluetoothLeService extends Service
         if (mBluetoothDeviceAddress != null && mBluetoothGatt != null)
         {
             Log.d(TAG, "UV: reconnectBleDevice");
-            if (mBluetoothGatt.connect())
-            {
-                Log.d(TAG, "UV: Able to reconnect");
-                return true;
-            }
-            else
-            {
-                Log.d(TAG, "UV: Unable to reconnect");
-                return false;
-            }
+
+            boolean reconnectGatt = mBluetoothGatt.connect();
+            Log.d(TAG, "UV: reconnectGatt: " + reconnectGatt);
+
+            Log.d(TAG, "UV: Able to reconnect");
+            return true;
         }
         return false;
     }

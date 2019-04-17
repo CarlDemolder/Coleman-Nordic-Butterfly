@@ -203,7 +203,7 @@ public class BleDevice implements Parcelable
             if (mBluetoothLeService != null)
             {
                 Log.d(TAG, String.format("UV: reconnectDevice Device: %s, Connection State %b", bleName, mConnectionState));
-                final boolean result = mBluetoothLeService.reconnectBleDevice(mBluetoothGatt, bleAddress);
+                boolean result = mBluetoothLeService.reconnectBleDevice(mBluetoothGatt, bleAddress);
                 Log.d(TAG, "UV: Connect request result=" + result);
             }
         }
@@ -541,7 +541,10 @@ public class BleDevice implements Parcelable
             {
                 Log.d(TAG, "UV: all Descriptors have been written");
                 writingDescriptor = false;
-                mBluetoothLeService.readCharacteristicHardwareVersion(mBluetoothGatt);
+                if(getTemperatureNotification())
+                {
+                    mBluetoothLeService.readCharacteristicHardwareVersion(mBluetoothGatt);
+                }
             }
         }
     };

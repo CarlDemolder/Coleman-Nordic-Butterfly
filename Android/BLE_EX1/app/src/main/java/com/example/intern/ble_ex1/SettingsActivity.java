@@ -30,6 +30,7 @@ public class SettingsActivity extends Fragment
     private final static String TAG = SettingsActivity.class.getSimpleName();
 
     private Button save_Button;
+    private Boolean stopButtonPressed = false;
 //    private Button start_Button;
     private Button stop_Button;
 
@@ -92,6 +93,7 @@ public class SettingsActivity extends Fragment
                 ((MainActivity) getActivity()).setAllNotifications(false);
                 ((MainActivity) getActivity()).stopDataTransmission();
 //                temp_CheckBox.setChecked(false);
+                stopButtonPressed = true;
             }
         });
         save_Button.setOnClickListener(new View.OnClickListener()
@@ -100,8 +102,11 @@ public class SettingsActivity extends Fragment
             public void onClick(View view)
             {
                 Log.d(TAG, "UV: Save Button Pressed");
-                ((MainActivity) getActivity()).setAllNotifications(false);
-                ((MainActivity) getActivity()).stopDataTransmission();
+                if(!stopButtonPressed)
+                {
+                    ((MainActivity) getActivity()).setAllNotifications(false);
+                    ((MainActivity) getActivity()).stopDataTransmission();
+                }
 //                temp_CheckBox.setChecked(false);
                 ((MainActivity) getActivity()).saveData();
             }

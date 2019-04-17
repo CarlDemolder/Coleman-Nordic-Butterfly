@@ -25,6 +25,8 @@ class Excel
 {
     private final static String TAG = Excel.class.getSimpleName();
     private String outputFile;
+    private String outputFileName;
+    private String outputFileLocation;
     private int file_counter;
     private Boolean file_creation;
     private WritableWorkbook excelWorkbook;
@@ -81,7 +83,8 @@ class Excel
         while(!file_creation)
         {
             //create a standard java.io.File object for the Workbook to use
-            excelFile = new File(internalData,(outputFile+"_"+currentDate+"_"+String.valueOf(file_counter)+".xls"));
+            outputFileName= outputFile+"_"+currentDate+"_"+String.valueOf(file_counter)+".xls";
+            excelFile = new File(internalData,(outputFileName));
             if(!excelFile.exists())
             {
                 file_creation = true;
@@ -104,8 +107,8 @@ class Excel
         {
             Log.d(TAG, String.format("UV: IOException Thrown %s", ex.getMessage()));
         }
-        String absoluteFileLocation = excelFile.getAbsolutePath();
-        Log.d(TAG, String.format("UV: %s", absoluteFileLocation));
+        outputFileLocation = excelFile.getAbsolutePath();
+        Log.d(TAG, String.format("UV: %s", outputFileLocation));
     }
 
     void createSheets()
@@ -121,7 +124,7 @@ class Excel
                 headerFormat.setAlignment(Alignment.CENTRE);
 
                 //Label = column and row
-                Label timeLabel = new Label(0, 0, "Time");
+                Label timeLabel = new Label(0, 0, "Timestamp");
                 Label counterLabel = new Label(1, 0, "Counter");
                 Label temperatureHeadingLabel = new Label(2, 0, "Temperature (C)");
 
@@ -221,5 +224,10 @@ class Excel
     File getExcelFile()
     {
         return excelFile;
+    }
+
+    String getOutputFileLocation()
+    {
+        return outputFileLocation;
     }
 }

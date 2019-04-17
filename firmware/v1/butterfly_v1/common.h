@@ -32,7 +32,7 @@
 #define I2C_SDA_PIN                     30
 #define I2C_SCL_PIN                     28
 
-#define HARDWARE_VERSION_NUMBER         "v1b.5"
+#define HARDWARE_VERSION_NUMBER         "v1b.6"
 
 void log_init(void);
 void hardware_init(void);

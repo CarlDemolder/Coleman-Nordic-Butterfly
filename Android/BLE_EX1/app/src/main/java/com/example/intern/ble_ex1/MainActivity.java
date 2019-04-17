@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -467,9 +468,10 @@ public class MainActivity extends AppCompatActivity
         excelFile.writeData();
         excelFile.closeWorkbook();
         emailExcelFile();
-        for(int i = 0; i < connectedBleSensors.size(); i++)
-        {
-            connectedBleSensors.get(i).initializeDeviceData();
-        }
+//        for(int i = 0; i < connectedBleSensors.size(); i++)
+//        {
+//            connectedBleSensors.get(i).initializeDeviceData();
+//        }
+        Toast.makeText(this, "Excel file saved here: "+excelFile.getOutputFileLocation(), Toast.LENGTH_LONG).show();
     }
 }
