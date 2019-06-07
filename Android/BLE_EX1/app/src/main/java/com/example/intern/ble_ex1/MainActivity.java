@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity
 
     public ViewPagerAdapter viewPagerAdapter;
 
+    private boolean recording_duration_timeout = false;
+
     private Excel excelFile;
 
 
@@ -70,6 +72,8 @@ public class MainActivity extends AppCompatActivity
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
+        recordingDurationTimeout();     // Setting an auto save call for a set duration timer
+
         bindGattService();
     }
 
@@ -95,21 +99,35 @@ public class MainActivity extends AppCompatActivity
     protected void onDestroy()
     {
         Log.d(TAG, "UV: onDestroy");
-        super.onDestroy();
-        for(int i = 0; i < connectedBleSensors.size(); i++)
+        try
         {
-            connectedBleSensors.get(i).destroyDevice();
+            saveData();
+            for(int i = 0; i < connectedBleSensors.size(); i++)
+            {
+                connectedBleSensors.get(i).destroyDevice();
+            }
+            this.unregisterReceiver(mGattUpdateReceiver);
+            this.unbindService(mServiceConnection);
         }
-        this.unregisterReceiver(mGattUpdateReceiver);
-        this.unbindService(mServiceConnection);
+        finally
+        {
+            super.onDestroy();
+        }
     }
 
     @Override
     public void onBackPressed()
     {
-        super.onBackPressed();
-        startActivity(new Intent(this, DeviceScanActivity.class));
-        finish();
+        try
+        {
+            saveData();
+        }
+        finally
+        {
+            super.onBackPressed();
+            startActivity(new Intent(this, DeviceScanActivity.class));
+            finish();
+        }
     }
 
 //    @Override
@@ -261,7 +279,15 @@ public class MainActivity extends AppCompatActivity
                             connectedBleSensors.get(i).setmGattServicesDiscovered(false);
                             Log.d(TAG, String.format("UV: BLE GATT Disconnected %s", connectedBleSensors.get(i).getBleName()));
                             ((SubActivity) viewPagerAdapter.getItem(i)).updateConnectionState(STATE_DISCONNECTED);
-                            connectedBleSensors.get(i).reconnectDevice();
+                            if(recording_duration_timeout)
+                            {
+                                connectedBleSensors.get(i).destroyDevice();
+                            }
+                            else
+                            {
+                                connectedBleSensors.get(i).reconnectDevice();
+                            }
+                            saveData();
                             break;
 
                         case BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED:
@@ -408,8 +434,7 @@ public class MainActivity extends AppCompatActivity
             emailIntent.addFlags(Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
 
             emailIntent.setType("vnd.android.cursor.dir/email");        // set the type to 'email'
-//            String to[] = {"CarlDemolder@gmail.com"};
-            String to[] = {"Linda.Franck@ucsf.edu"};
+            String to[] = {"neosensorstudy@gmail.com"};
             emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
             emailIntent.putExtra(Intent.EXTRA_STREAM, path);        // the attachment
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Temperature Test Data");     // the mail subject
@@ -442,11 +467,23 @@ public class MainActivity extends AppCompatActivity
 
     public void stopDataTransmission()
     {
+        recording_duration_timeout = true;
         // Only Writes to Descriptors, not the characteristic to enable Notifications from the device to the phone
         for(int i = 0; i < connectedBleSensors.size(); i++)
         {
+            final int temp_i = i;
             connectedBleSensors.get(i).resetGattDescriptors();
-//            connectedBleSensors.get(i).destroyDevice();
+            final Handler disconnectHandler = new Handler();
+            Runnable disconnectRunnable = new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    Log.d(TAG, "UV: Recording Duration Timeout met, Disconnect BLE Device");
+                    connectedBleSensors.get(temp_i).disconnectBleDevice();
+                }
+            };
+            disconnectHandler.postDelayed(disconnectRunnable, 30000L);
         }
     }
 
@@ -460,18 +497,75 @@ public class MainActivity extends AppCompatActivity
 
     public void saveData()
     {
-        Log.d(TAG, "UV: saveData");
-        excelFile = new Excel(connectedBleSensors);        //Creating an instance of an Excel Spreadsheet to store values properly
-        excelFile.setOutputFile();
-        excelFile.createWorkbook();
-        excelFile.createSheets();
-        excelFile.writeData();
-        excelFile.closeWorkbook();
-        emailExcelFile();
-//        for(int i = 0; i < connectedBleSensors.size(); i++)
-//        {
-//            connectedBleSensors.get(i).initializeDeviceData();
-//        }
-        Toast.makeText(this, "Excel file saved here: "+excelFile.getOutputFileLocation(), Toast.LENGTH_LONG).show();
+        if(connectedBleSensors.get(0).getCounterArray().size() > 0)
+        {
+            Thread saveDataThread = new Thread()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        Log.d(TAG, "UV: saveData");
+                        if(excelFile == null)
+                        {
+                            excelFile = new Excel(connectedBleSensors);        //Creating an instance of an Excel Spreadsheet to store values properly
+                        }
+                        excelFile.setOutputFile();
+                        excelFile.createWorkbook();
+                        excelFile.createSheets();
+                        excelFile.writeData();
+                        excelFile.closeWorkbook();
+                        emailExcelFile();
+                        // possible call to reinitializeDeviceData();
+                        MainActivity.this.runOnUiThread(new Runnable()
+                        {
+                            @Override public void run()
+                            {
+                                Toast.makeText(MainActivity.this, "Excel file saved here: " + excelFile.getOutputFileLocation(), Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    } catch (Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            saveDataThread.run();
+        }
+    }
+
+    public void recordingDurationTimeout()
+    {
+        Thread recordingDurationTimeoutThread = new Thread()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Log.d(TAG, "UV: Initializing Recording Duration Timeout");
+                    long delayMillis = connectedBleSensors.get(0).getRecordingDuration();
+                    Log.d(TAG, "UV: delayMillis: "+delayMillis);
+                    final Handler timerHandler = new Handler();
+                    Runnable timerRunnable = new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                           Log.d(TAG, "UV: Recording Duration Timeout met.");
+                           setAllNotifications(false);
+                           stopDataTransmission();
+                        }
+                    };
+                    timerHandler.postDelayed(timerRunnable, delayMillis);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        };
+        recordingDurationTimeoutThread.setPriority(Thread.MAX_PRIORITY);
     }
 }

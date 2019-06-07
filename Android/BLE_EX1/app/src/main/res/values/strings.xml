@@ -46,8 +46,10 @@
     <string name="ble_status_connected">Connected</string>
 
     <string name="sampling_rate_title_text">Sampling Rate</string>
+    <string name="recording_duration_title_text">Recording Duration</string>
+    <string name="patient_name_title_text">Patient ID: </string>
 
-    <string name="software_version_number">v1.7</string>
+    <string name="software_version_number">v1.10</string>
 
     <string name="hardware_version_title_text">Hardware Version:</string>
     <string name="hardware_version_text">v0.0</string>
@@ -62,7 +64,17 @@
         <item>30 (mins)</item>
         <item>1 (hour)</item>
         <item>5 (hours)</item>
+    </string-array>
 
+    <string-array name="recording_time_array">
+        <item>1 (hour)</item>
+        <item>2 (hours)</item>
+        <item>3 (hours)</item>
+        <item>4 (hours)</item>
+        <item>5 (hours)</item>
+        <item>6 (hours)</item>
+        <item>7 (hours)</item>
+        <item>8 (hours)</item>
     </string-array>
 
 </resources>

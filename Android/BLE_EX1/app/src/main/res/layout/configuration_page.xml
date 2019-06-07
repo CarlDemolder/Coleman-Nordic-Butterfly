@@ -5,7 +5,6 @@
         android:layout_height="match_parent">
 
     <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_height="0dp" android:id="@+id/linearLayout" app:layout_constraintEnd_toEndOf="parent"
@@ -28,6 +27,44 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
+        </LinearLayout>
+
+        <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:text="@string/recording_duration_title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            <Spinner
+                    android:id="@+id/recording_duration_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_weight="1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:text="@string/patient_name_title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:text=""
+                    android:ems="10"
+                    android:id="@+id/patientNameText"/>
         </LinearLayout>
 
         <LinearLayout

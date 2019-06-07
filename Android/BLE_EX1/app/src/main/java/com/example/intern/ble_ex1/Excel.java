@@ -29,6 +29,7 @@ class Excel
     private String outputFileLocation;
     private int file_counter;
     private Boolean file_creation;
+    private Boolean file_resave;
     private WritableWorkbook excelWorkbook;
     private ArrayList<WritableSheet> excelSheet;
     private File excelFile;
@@ -39,6 +40,7 @@ class Excel
     {
         file_counter = 0;
         file_creation = false;
+        file_resave = false;
         connectedBleDevices = BleDevices;
         excelSheet = new ArrayList<>();
     }
@@ -48,7 +50,7 @@ class Excel
         Log.d(TAG, "UV: setOutputFile");
         if(connectedBleDevices.get(0).getTempArray().size() > 1)
         {
-            outputFile = "Temperature";
+            outputFile = connectedBleDevices.get(0).getPatientName();
         }
     }
 
@@ -80,19 +82,33 @@ class Excel
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);            // Simple Date Format to get Day, Month, Year, Etc...
         String currentDate = sdf.format(cal.getTime());
 
-        while(!file_creation)
+        if(!file_resave)
         {
-            //create a standard java.io.File object for the Workbook to use
-            outputFileName= outputFile+"_"+currentDate+"_"+String.valueOf(file_counter)+".xls";
-            excelFile = new File(internalData,(outputFileName));
-            if(!excelFile.exists())
+            while (!file_creation)
             {
-                file_creation = true;
-                Log.d(TAG, "UV: File did not exist");
+                //create a standard java.io.File object for the Workbook to use
+                outputFileName = outputFile + "_" + currentDate + "_" + String.valueOf(file_counter) + ".xls";
+                excelFile = new File(internalData, outputFileName);
+                if (!excelFile.exists())
+                {
+                    file_creation = true;
+                    Log.d(TAG, "UV: File did not exist");
+                }
+                else
+                {
+                    file_counter = file_counter + 1;                    // File Counter to increase for multiple data samples
+                }
             }
-            else
+        }
+        else
+        {
+            if(excelFile.exists())
             {
-                file_counter = file_counter + 1;                    // File Counter to increase for multiple data samples
+                if(excelFile.delete())
+                {
+                    Log.d(TAG, "UV: Recreating Excel File");
+                    excelFile = new File(internalData, outputFileName);
+                }
             }
         }
 
@@ -116,6 +132,7 @@ class Excel
         Log.d(TAG, "UV: createSheet");
         try
         {
+            excelSheet = new ArrayList<>();
             for(int i = 0; i < connectedBleDevices.size(); i++)
             {
                 excelSheet.add(excelWorkbook.createSheet(connectedBleDevices.get(i).getBleName(), i));
@@ -151,7 +168,7 @@ class Excel
         for(int j = 0; j < connectedBleDevices.size(); j++)
         {
             Log.d(TAG, String.format("UV: Writing Counter/Time Data %s", connectedBleDevices.get(j).getBleName()));
-            for (int i = 0; i < connectedBleDevices.get(j).getCounterArray().size(); i++)
+            for (int i = 0; i < connectedBleDevices.get(j).getCounterArray().size()-1; i++)
             {
                 row = i + 1;
                 //Column, Row
@@ -172,7 +189,7 @@ class Excel
             }
             if (connectedBleDevices.get(j).getTempArray().size() > 1)
             {
-                for (int i = 0; i < connectedBleDevices.get(j).getCounterArray().size(); i++)
+                for (int i = 0; i < connectedBleDevices.get(j).getCounterArray().size()-1; i++)
                 {
                     row = i + 1;
                     //Column, Row
@@ -208,6 +225,7 @@ class Excel
         try
         {
             excelWorkbook.close();
+            file_resave = true;
         }
         catch (IOException e)
         {
@@ -229,5 +247,10 @@ class Excel
     String getOutputFileLocation()
     {
         return outputFileLocation;
+    }
+
+    Boolean getFile_resave()
+    {
+        return file_resave;
     }
 }

@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.2'
+        classpath 'com.android.tools.build:gradle:3.4.1'
         
 
         // NOTE: Do not place your application dependencies here; they belong
@@ -20,7 +20,7 @@ allprojects {
         google()
         jcenter()
     }
-    buildDir = "C:/Users/cdemolde/Documents/Android_Projects/${rootProject.name}/${project.name}"
+    buildDir = "C:/Users/cdemolde/Documents/Android_Projects/UV/${rootProject.name}/${project.name}"
 }
 
 task clean(type: Delete) {

@@ -5,11 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Spinner;
+import android.widget.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,7 +21,8 @@ public class ConfigurationActivity extends AppCompatActivity
     private ArrayList<String> deviceArrayAddresses;
     private ArrayList<BleDevice> bleSensors;
 
-    private int spinnerSelectedItemNumber;
+    private int spinnerSamplingIntervalNumber;
+    private int spinnerRecordingDurationNumber;
 
     private Intent mainIntent;      // Intent to create the Main Activity and pass through elements of the Bluetooth Devices
 
@@ -40,13 +37,13 @@ public class ConfigurationActivity extends AppCompatActivity
 
         Button start_Button = findViewById(R.id.startBtn);         //Start button to start graphing and enable notifications of Selected Values
 
-        initializeSpinner();        // Create a spinner to let the user select the sampling rate
+        initializeSpinners();        // Create a spinner to let the user select the sampling rate and recording interval
 
         mainIntent = new Intent(this, MainActivity.class);
 
-        updateBluetoothInfo();      // Get Bluetooth Names and Addresses from Device Scan Activity
-        initializeBleDevice();      // Create Arraylist containing BLE Devices
-        checkClicked(temp_CheckBox);     // Function used to determine whether the CheckBoxes have been selected
+        updateBluetoothInfo();                      // Get Bluetooth Names and Addresses from Device Scan Activity
+        initializeBleDevice();                      // Create Arraylist containing BLE Devices
+        checkClicked(temp_CheckBox);                // Function used to determine whether the CheckBoxes have been selected
         buttonClicked(start_Button);                // Button used to start the main activity once all settings have been used
     }
 
@@ -78,15 +75,22 @@ public class ConfigurationActivity extends AppCompatActivity
         }
     }
 
-    // Initialize the Spinner to let the User selected the sampling rate for the device
-    private void initializeSpinner()
+    // Initialize the Spinner to let the User selected the sampling rate and recording interval for the device
+    private void initializeSpinners()
     {
-        spinnerSelectedItemNumber = 0;      // Preseting the spinner Selected Item Number to the shortest Sampling Interval
+        spinnerSamplingIntervalNumber = 0;      // Preseting the spinner Sampling Interval Number to the shortest Sampling Interval
         Spinner sampling_rate_Spinner = findViewById(R.id.sampling_rate_spinner);      // Spinner used to select Sampling Rate of Notifications
-        ArrayList<String> spinnerArrayList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.sampling_rate_array)));
-        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinnerArrayList);
-        sampling_rate_Spinner.setAdapter(spinnerArrayAdapter);
-        spinnerItemSelected(sampling_rate_Spinner);
+        ArrayList<String> spinnerSamplingRateArrayList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.sampling_rate_array)));
+        ArrayAdapter<String> spinnerSamplingRateArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinnerSamplingRateArrayList);
+        sampling_rate_Spinner.setAdapter(spinnerSamplingRateArrayAdapter);
+
+        spinnerRecordingDurationNumber = 0;      // Preseting the spinner Recording Duration Number to the shortest Sampling Interval
+        Spinner recording_Duration_Spinner = findViewById(R.id.recording_duration_spinner);      // Spinner used to select Recording Duration of Notifications
+        ArrayList<String> spinnerRecordingDurationArrayList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.recording_time_array)));
+        ArrayAdapter<String> spinnerRecordingDurationArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spinnerRecordingDurationArrayList);
+        recording_Duration_Spinner.setAdapter(spinnerRecordingDurationArrayAdapter);
+
+        spinnerItemSelected(sampling_rate_Spinner, recording_Duration_Spinner);
     }
 
     private void checkClicked(CheckBox temp_CheckBox)
@@ -122,6 +126,11 @@ public class ConfigurationActivity extends AppCompatActivity
             @Override
             public void onClick(View view)
             {
+                EditText patientNameEditText = findViewById(R.id.patientNameText);
+                for(int i = 0; i < bleSensors.size(); i++)
+                {
+                    bleSensors.get(i).setPatientName(patientNameEditText.getText().toString());
+                }
                 Bundle configurationBundle = new Bundle();
                 configurationBundle.putParcelableArrayList(MainActivity.EXTRAS_BLE_DEVICES, bleSensors);
                 mainIntent.putExtras(configurationBundle);
@@ -130,7 +139,7 @@ public class ConfigurationActivity extends AppCompatActivity
         });
     }
 
-    private void spinnerItemSelected(Spinner sampling_rate_Spinner)
+    private void spinnerItemSelected(Spinner sampling_rate_Spinner, Spinner recording_Duration_Spinner)
     {
         sampling_rate_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -139,16 +148,42 @@ public class ConfigurationActivity extends AppCompatActivity
             {
                 try
                 {
-                    spinnerSelectedItemNumber = position;
-                    Log.d(TAG, String.format("UV: %d", spinnerSelectedItemNumber));
+                    spinnerSamplingIntervalNumber = position;
+                    Log.d(TAG, String.format("UV: %d", spinnerSamplingIntervalNumber));
                     for(int i = 0; i < bleSensors.size(); i++)
                     {
-                        bleSensors.get(i).setSamplingRate(spinnerSelectedItemNumber);
+                        bleSensors.get(i).setSamplingRate(spinnerSamplingIntervalNumber);
                     }
                 }
                 catch (Exception e)
                 {
-                    Log.d(TAG, "UV: Spinner Item Select Exception Thrown");
+                    Log.d(TAG, "UV: Spinner Sampling Interval Item Select Exception Thrown");
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView)
+            {
+
+            }
+        });
+
+        recording_Duration_Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id)
+            {
+                try
+                {
+                    spinnerRecordingDurationNumber = position;
+                    Log.d(TAG, String.format("UV: %d", spinnerRecordingDurationNumber));
+                    for(int i = 0; i < bleSensors.size(); i++)
+                    {
+                        bleSensors.get(i).setRecordingDuration(spinnerRecordingDurationNumber);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Log.d(TAG, "UV: Spinner Recording Duration Item Select Exception Thrown");
                 }
             }
             @Override

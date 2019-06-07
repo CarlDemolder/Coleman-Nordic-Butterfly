@@ -9,6 +9,7 @@ import android.util.Log;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
 
@@ -36,6 +37,10 @@ public class BleDevice implements Parcelable
     private boolean temp_Recording;
 
     private int samplingRate;
+
+    private int recordingDuration;
+
+    private String patientName;
 
     private double counter;
 
@@ -74,9 +79,11 @@ public class BleDevice implements Parcelable
         parcelDestination.writeString(bleName);         // Place BLE Name into Parcel
         parcelDestination.writeString(connectionState);     // Place BLE Connection State into Parcel
         parcelDestination.writeString(hardwareVersion);     // Place Hardware Version into Parcel
+        parcelDestination.writeString(patientName);         // Place Patient Name into Parcel
         parcelDestination.writeByte((byte) (temp_Notification ? 1 : 0));        // Place Temperature Notification into Parcel
         parcelDestination.writeByte((byte) (temp_Recording ? 1 : 0));        // Place Temperature Recording Flag into Parcel
         parcelDestination.writeInt(samplingRate);               // Place Sampling Rate Int into Parcel
+        parcelDestination.writeInt(recordingDuration);               // Place Recording Duration Int into Parcel
         parcelDestination.writeDouble(counter);         // Place Counter into Parcel
         parcelDestination.writeInt(maxDataSet);         // Place maxDataSet into Parcel
         parcelDestination.writeList(temp_data_array);   // Place Temperature Data ArrayList into Parcel
@@ -91,9 +98,11 @@ public class BleDevice implements Parcelable
         bleName = parcel.readString();                      // Get the BLE Name from the Parcel
         connectionState = parcel.readString();              // Get the BLE Connection State into Parcel
         hardwareVersion = parcel.readString();              // Get the Hardware Version into Parcel
+        patientName = parcel.readString();                  // Get the Patient Name into Parcel
         temp_Notification = parcel.readByte() != 0;         // Get the Temperature Notification from the Parcel
         temp_Recording = parcel.readByte() != 0;            // Get the Temperature Recording Flag from the Parcel
         samplingRate = parcel.readInt();                    // Get the Sampling Rate from the Parcel
+        recordingDuration = parcel.readInt();                    // Get the Recording Duration from the Parcel
         counter = parcel.readDouble();                      // Get the Counter from the Parcel
         maxDataSet = parcel.readInt();                      // Get the maxDataSet from the Parcels
 
@@ -138,7 +147,9 @@ public class BleDevice implements Parcelable
     {
         counter = 0;
         maxDataSet = 10000;
+        recordingDuration = 8;
         hardwareVersion = "v0X.0";
+        patientName = "";
         temp_Notification = false;
 
         temp_Recording = false;
@@ -244,7 +255,7 @@ public class BleDevice implements Parcelable
         if(mBluetoothLeService != null)
         {
             mBluetoothLeService.close(mBluetoothGatt);
-            mBluetoothLeService = null;
+//            mBluetoothLeService = null;
         }
         setmPreviouslyConnected(false);
     }
@@ -346,6 +357,16 @@ public class BleDevice implements Parcelable
         return hardwareVersion;
     }
 
+    void setPatientName(String tempPatientName)
+    {
+        patientName = tempPatientName;
+    }
+
+    String getPatientName()
+    {
+        return patientName;
+    }
+
     // Convert String Data to Int Data and Save Data to Graph
     private void recordData(String gattValue, int characteristic_type)
     {
@@ -376,8 +397,8 @@ public class BleDevice implements Parcelable
 
     private double getCounterInterval()
     {
-        double counter_interval[] = {10, 30, 1, 5, 10, 30, 1, 5};
-        return counter_interval[samplingRate];
+        ArrayList<Double> counter_interval = new ArrayList<>(Arrays.asList(10.0, 30.0, 1.0, 5.0, 10.0, 30.0, 1.0, 5.0));
+        return counter_interval.get(samplingRate);
     }
 
     String getCounterIntervalRange()
@@ -398,8 +419,19 @@ public class BleDevice implements Parcelable
 
     double getCounterMax()
     {
-        int max_range[] = {10, 30, 1, 5, 10, 30, 1, 5};
-        return max_range[samplingRate]*10;
+        ArrayList<Integer> max_range = new ArrayList<>(Arrays.asList(10, 30, 1, 5, 10, 30, 1, 5));
+        return max_range.get(samplingRate)*10;
+    }
+
+    void setRecordingDuration(int tempRecordingDuration)
+    {
+        recordingDuration = tempRecordingDuration;
+    }
+
+    long getRecordingDuration()
+    {
+        ArrayList<Long> recording_duration = new ArrayList<>(Arrays.asList(1L, 2L, 3L, 4L, 5L, 6L, 7L, 8L));
+        return recording_duration.get(recordingDuration) * 3600000L;
     }
 
     String getBleAddress()
