@@ -567,5 +567,6 @@ public class MainActivity extends AppCompatActivity
             }
         };
         recordingDurationTimeoutThread.setPriority(Thread.MAX_PRIORITY);
+        recordingDurationTimeoutThread.run();
     }
 }

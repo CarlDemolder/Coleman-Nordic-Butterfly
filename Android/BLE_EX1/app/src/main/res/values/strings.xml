@@ -49,7 +49,7 @@
     <string name="recording_duration_title_text">Recording Duration</string>
     <string name="patient_name_title_text">Patient ID: </string>
 
-    <string name="software_version_number">v1.10</string>
+    <string name="software_version_number">v1.11</string>
 
     <string name="hardware_version_title_text">Hardware Version:</string>
     <string name="hardware_version_text">v0.0</string>
