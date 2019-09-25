@@ -1,5 +1,5 @@
 Output/ble_app_template_pca10040_s132\ Release/Obj/nrfx_twim.o: \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/src/nrfx_twim.c \
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/src/nrfx_twim.c \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/nrfx.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/integration/nrfx/nrfx_config.h \
  ../config/sdk_config.h \
@@ -51,7 +51,7 @@ Output/ble_app_template_pca10040_s132\ Release/Obj/nrfx_twim.o: \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/include/nrfx_twim.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/hal/nrf_twim.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/hal/nrf_gpio.h \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/src/prs/nrfx_prs.h \
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/src/prs/nrfx_prs.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/integration/nrfx/nrfx_log.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/log/nrf_log.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/util/sdk_common.h \

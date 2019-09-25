@@ -1,6 +1,6 @@
 Output/ble_app_template_pca10040_s132\ Release/Obj/boards.o: \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/components/boards/boards.c \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/components/boards/boards.h \
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/boards/boards.c \
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/boards/boards.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/hal/nrf_gpio.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/nrfx.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/integration/nrfx/nrfx_config.h \
@@ -50,4 +50,4 @@ Output/ble_app_template_pca10040_s132\ Release/Obj/boards.o: \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/util/sdk_resources.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/softdevice/s132/headers/nrf_sd_def.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/drivers/nrfx_errors.h \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/components/boards/pca10040.h
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/boards/pca10040.h

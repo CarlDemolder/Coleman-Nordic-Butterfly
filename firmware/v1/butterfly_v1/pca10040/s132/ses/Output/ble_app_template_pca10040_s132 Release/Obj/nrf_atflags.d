@@ -1,5 +1,5 @@
 Output/ble_app_template_pca10040_s132\ Release/Obj/nrf_atflags.o: \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/components/libraries/atomic_flags/nrf_atflags.c \
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/atomic_flags/nrf_atflags.c \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/mdk/nrf.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/mdk/nrf52.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/toolchain/cmsis/include/core_cm4.h \
@@ -28,4 +28,4 @@ Output/ble_app_template_pca10040_s132\ Release/Obj/nrf_atflags.o: \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 4.12/include/stddef.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/util/sdk_macros.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/util/nrf_assert.h \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/components/libraries/atomic_flags/nrf_atflags.h
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/atomic_flags/nrf_atflags.h

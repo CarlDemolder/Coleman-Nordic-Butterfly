@@ -1,6 +1,6 @@
 Output/ble_app_template_pca10040_s132\ Release/Obj/bsp_btn_ble.o: \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/components/libraries/bsp/bsp_btn_ble.c \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/components/libraries/bsp/bsp_btn_ble.h \
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/bsp/bsp_btn_ble.c \
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/bsp/bsp_btn_ble.h \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 4.12/include/stdint.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/softdevice/s132/headers/ble.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/softdevice/s132/headers/nrf_svc.h \
@@ -26,7 +26,7 @@ Output/ble_app_template_pca10040_s132\ Release/Obj/bsp_btn_ble.o: \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/mdk/nrf52_name_change.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/mdk/compiler_abstraction.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/softdevice/s132/headers/ble_gatts.h \
- C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96\nRF5_SDK_15.2.0_9412b96/components/libraries/bsp/bsp.h \
+ C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/libraries/bsp/bsp.h \
  C:/Program\ Files/SEGGER/SEGGER\ Embedded\ Studio\ for\ ARM\ 4.12/include/stdbool.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/components/boards/boards.h \
  C:/Users/cdemolde/Documents/Nordic_SDK/nRF5SDK15209412b96/nRF5_SDK_15.2.0_9412b96/modules/nrfx/hal/nrf_gpio.h \
